@@ -8,6 +8,7 @@ int main()
 {
   setlocale(LC_ALL, "");
   initscr();
+  noecho();
   if(has_colors())
   {
       start_color();
