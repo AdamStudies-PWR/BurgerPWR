@@ -18,7 +18,7 @@ void Interface::print_title()
 {
   attron(COLOR_PAIR(1));
   mvprintw(rows/3 - 7, columns/2 - 53, ".______    __    __  .______        _______  _______ .______      .______  ____    __    ____ .______");
-  mvprintw(rows/3 - 6, columns/2 - 53, "|   _  \\  |  |  |  | |   _  \\      /  _____||   ____||   _  \\     |   _ \\  \\   \\  /  \\  /   / |   _  \\     ");
+  mvprintw(rows/3 - 6, columns/2 - 53, "|   _  \\  |  |  |  | |   _  \\      /  _____||   ____||   _  \\     |   _  \\ \\   \\  /  \\  /   / |   _  \\     ");
   mvprintw(rows/3 - 5, columns/2 - 53, "|  |_)  | |  |  |  | |  |_)  |    |  |  __  |  |__   |  |_)  |    |  |_)  | \\   \\/    \\/   /  |  |_)  |    ");
   mvprintw(rows/3 - 4, columns/2 - 53, "|   _  <  |  |  |  | |      /     |  | |_ | |   __|  |      /     |   ___/   \\            /   |      /     ");
   mvprintw(rows/3 - 3, columns/2 - 53, "|  |_)  | |  `--'  | |  |\\  \\----.|  |__| | |  |____ |  |\\  \\----.|  |        \\    /\\    /    |  |\\  \\----.");
@@ -67,7 +67,7 @@ void Interface::main_menu()
 
 void Interface::set_up()
 {
-  string choice[] = {selection, "  ", "  ", "  ", "  "};
+  string choice[] = {selection, "  ", "  ", "  ", "  ", "  "};
   string mode = "nieskończony";
   int ch = 0;
   int input;
@@ -80,7 +80,8 @@ void Interface::set_up()
     mvprintw(rows/2 + 1, columns/2 - 7, "[%s] Tryb: %s", choice[1].c_str(), mode.c_str());
     mvprintw(rows/2 + 2, columns/2 - 7, "[%s] Ilość pracowników: %d", choice[2].c_str(), workers);
     mvprintw(rows/2 + 3, columns/2 - 7, "[%s] Pensja: %d zł na godzinę", choice[3].c_str(), pay);
-    mvprintw(rows/2 + 4, columns/2 - 7, "[%s] Cofnij", choice[4].c_str());
+    mvprintw(rows/2 + 4, columns/2 - 7, "[%s] Ceny", choice[4].c_str());
+    mvprintw(rows/2 + 5, columns/2 - 7, "[%s] Cofnij", choice[5].c_str());
     input = getch();
     check_size();
     switch(input)
@@ -88,14 +89,14 @@ void Interface::set_up()
        case KEY_UP:
        {
          choice[ch] = "  ";
-         if(ch - 1 < 0) ch = 4;
+         if(ch - 1 < 0) ch = 5;
          else ch--;
          choice[ch] = selection;
        } break;
        case KEY_DOWN:
        {
           choice[ch] = "  ";
-          if(ch + 1 > 4) ch = 0;
+          if(ch + 1 > 5) ch = 0;
           else ch++;
           choice[ch] = selection;
        } break;
@@ -121,7 +122,7 @@ void Interface::set_up()
             {
               highscore = !highscore;
               if(highscore) mode = "highscore";
-              else  mode = "niskończony";
+              else  mode = "nieskończony";
             } break;
             case 3: if(pay + 1 < 25) pay++; break;
             case 2: if(workers + 1 < 7) workers++; break;
@@ -131,8 +132,74 @@ void Interface::set_up()
        {
           switch(ch)
           {
-            case 4: return;
+            case 4: set_prices(); break;
+            case 5: return;
           }
+       } break;
+    }
+  } while (true);
+}
+
+void Interface::set_prices()
+{
+  string choice[] = {selection, "  ", "  ", "  ", "  ", "  "};
+  string mode = "nieskończony";
+  int ch = 0;
+  int input;
+  do
+  {
+    clear();
+    print_title();
+    printw("\n\n\n\n\n");
+    mvprintw(rows/2, columns/2 - 7, "[%s] Burger: %d", choice[0].c_str(), prices[0]);
+    mvprintw(rows/2 + 1, columns/2 - 7, "[%s] Frytki: %d", choice[1].c_str(), prices[1]);
+    mvprintw(rows/2 + 2, columns/2 - 7, "[%s] Cola: %d", choice[2].c_str(), prices[2]);
+    mvprintw(rows/2 + 3, columns/2 - 7, "[%s] Pizza %d:", choice[3].c_str(), prices[3]);
+    mvprintw(rows/2 + 4, columns/2 - 7, "[%s] Kebab: %d", choice[4].c_str(), prices[4]);
+    mvprintw(rows/2 + 5, columns/2 - 7, "[%s] Zatwierdź", choice[5].c_str());
+    input = getch();
+    check_size();
+    switch(input)
+    {
+       case KEY_UP:
+       {
+         choice[ch] = "  ";
+         if(ch - 1 < 0) ch = 5;
+         else ch--;
+         choice[ch] = selection;
+       } break;
+       case KEY_DOWN:
+       {
+          choice[ch] = "  ";
+          if(ch + 1 > 5) ch = 0;
+          else ch++;
+          choice[ch] = selection;
+       } break;
+       case KEY_LEFT:
+       {
+          switch(ch)
+          {
+            case 0: if(prices[0] - 1 > 3) prices[0]--; break;
+            case 1: if(prices[1] - 1 > 2) prices[1]--; break;
+            case 2: if(prices[2] - 1 > 2) prices[2]--; break;
+            case 3: if(prices[3] - 1 > 5) prices[3]--; break;
+            case 4: if(prices[4] - 1 > 4) prices[4]--; break;
+          }
+       } break;
+       case KEY_RIGHT:
+       {
+          switch(ch)
+          {
+            case 0: if(prices[0] + 1 < 17) prices[0]++; break;
+            case 1: if(prices[1] + 1 < 13) prices[1]++; break;
+            case 2: if(prices[2] + 1 < 13) prices[2]++; break;
+            case 3: if(prices[3] + 1 < 25) prices[3]++; break;
+            case 4: if(prices[4] + 1 < 21) prices[4]++; break;
+          }
+       } break;
+       case 10:
+       {
+          if(ch == 5) return;
        } break;
     }
   } while (true);
