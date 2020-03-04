@@ -2,8 +2,8 @@
 #define INTERFACE_H
 
 #include <iostream>
-#include "pthread.h"
 #include "ncurses.h"
+#include "gamemaster.h"
 
 using namespace std;
 
@@ -24,7 +24,7 @@ private:
   //Metody
   void check_size();
   void print_title();
-  void set_up();
+  bool set_up();
   void set_prices();
 public:
   Interface();

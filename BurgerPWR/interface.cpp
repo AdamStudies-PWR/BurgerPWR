@@ -3,6 +3,8 @@
 Interface::Interface()
 {
   printw("Dopasuj rozmiar okna tak aby napis BurgerPWR był widoczny na ekranie oraz znajdował sie mniej więcej na środku ekranu");
+  int g = getch();
+  printw("%d", g);
   getch();
   check_size();
   init_pair(1, COLOR_RED, COLOR_BLACK);
@@ -57,15 +59,14 @@ void Interface::main_menu()
        } break;
        case 10:
        {
-          printw("Here I am");
           if(ch2 == selection) return;
-          else set_up();
+          else if(set_up()) return;
        } break;
     }
   } while (true);
 }
 
-void Interface::set_up()
+bool Interface::set_up()
 {
   string choice[] = {selection, "  ", "  ", "  ", "  ", "  "};
   string mode = "nieskończony";
@@ -132,8 +133,13 @@ void Interface::set_up()
        {
           switch(ch)
           {
+            case 0:
+            {
+              new GameMaster();
+              return true;
+            } break;
             case 4: set_prices(); break;
-            case 5: return;
+            case 5: return false;
           }
        } break;
     }

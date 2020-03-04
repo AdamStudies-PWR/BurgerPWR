@@ -4,10 +4,12 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+        gamemaster.cpp \
         interface.cpp \
         main.cpp
 
 HEADERS += \
+    gamemaster.h \
     interface.h
 
 INCLUDEPATH += -L/usr/lib/headers/
