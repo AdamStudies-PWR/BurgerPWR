@@ -3,6 +3,12 @@
 
 #include "ncurses.h"
 
+#define TITLE 1
+#define INFO_BAR 2
+#define RESTAURANT 3
+#define WORKER 4
+#define CLIENT 5
+
 class GraphicFunc
 {
 public:

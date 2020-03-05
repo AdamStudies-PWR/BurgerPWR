@@ -5,11 +5,6 @@
 #include <chrono>
 #include "graphicfunc.h"
 
-#define INFO_BAR 2
-#define RESTAURANT 3
-#define WORKER 4
-#define CLIENT 5
-
 using namespace std;
 
 class GameMaster: public GraphicFunc

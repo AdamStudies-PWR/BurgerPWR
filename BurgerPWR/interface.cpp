@@ -7,7 +7,6 @@ Interface::Interface()
   //printw("%d", g);
   getch();
   check_size();
-  init_pair(1, COLOR_RED, COLOR_BLACK);
   main_menu();
 }
 
