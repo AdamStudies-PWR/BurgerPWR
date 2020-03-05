@@ -2,6 +2,7 @@
 
 GameMaster::GameMaster()
 {
+  init_pair(2, COLOR_WHITE, COLOR_RED);
   thread keyboard(&GameMaster::check_keyboard, this);
   keyboard.detach();
   draw_game();
@@ -12,13 +13,8 @@ void GameMaster::main_loop()
 {
   while(!end)
   {
-
+    this_thread::sleep_for(chrono::seconds(1));
   }
-}
-
-void GameMaster::draw_game()
-{
-
 }
 
 void GameMaster::check_keyboard()
@@ -27,6 +23,7 @@ void GameMaster::check_keyboard()
   {
     int input = getch();
     if(input == 274) this->setEnd(true);
+    this_thread::sleep_for(chrono::seconds(1));
   }
 }
 

@@ -5,11 +5,13 @@ CONFIG -= qt
 
 SOURCES += \
         gamemaster.cpp \
+        graphicfunc.cpp \
         interface.cpp \
         main.cpp
 
 HEADERS += \
     gamemaster.h \
+    graphicfunc.h \
     interface.h
 
 INCLUDEPATH += -L/usr/lib/headers/
