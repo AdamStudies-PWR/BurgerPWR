@@ -1,7 +1,8 @@
 #ifndef GAMEMASTER_H
 #define GAMEMASTER_H
 
-#include <threads.h>
+#include <thread>
+#include <ncurses.h>
 
 using namespace std;
 
@@ -15,6 +16,8 @@ private:
   void main_loop();
   void check_keyboard();
 public:
+  bool getEnd();
+  void setEnd(bool end);
   GameMaster();
 };
 

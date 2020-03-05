@@ -14,3 +14,4 @@ HEADERS += \
 
 INCLUDEPATH += -L/usr/lib/headers/
 LIBS += -L/usr/lib -lncurses
+LIBS += -pthread

@@ -3,8 +3,8 @@
 Interface::Interface()
 {
   printw("Dopasuj rozmiar okna tak aby napis BurgerPWR był widoczny na ekranie oraz znajdował sie mniej więcej na środku ekranu");
-  int g = getch();
-  printw("%d", g);
+  //int g = getch();
+  //printw("%d", g);
   getch();
   check_size();
   init_pair(1, COLOR_RED, COLOR_BLACK);
