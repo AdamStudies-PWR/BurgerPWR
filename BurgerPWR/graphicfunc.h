@@ -8,6 +8,8 @@
 #define RESTAURANT 3
 #define WORKER 4
 #define CLIENT 5
+#define REGISTER 6
+#define SIT 7
 
 class GraphicFunc
 {
