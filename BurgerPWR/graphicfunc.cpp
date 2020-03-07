@@ -7,6 +7,18 @@ GraphicFunc::GraphicFunc()
   init_pair(RESTAURANT, COLOR_GREEN, COLOR_YELLOW);
   init_pair(REGISTER, COLOR_RED, COLOR_YELLOW);
   init_pair(SIT, COLOR_BLACK, COLOR_YELLOW);
+  init_pair(WINDOW, COLOR_RED, COLOR_WHITE);
+  init_pair(THREADS, COLOR_BLACK, COLOR_BLUE);
+}
+
+void GraphicFunc::refresh_bar()
+{
+  attron(COLOR_PAIR(INFO_BAR));
+  for(int i=0; i<columns; i++)
+  {
+    mvprintw(rows - 1, i, " ");
+  }
+  attroff(COLOR_PAIR(INFO_BAR));
 }
 
 void GraphicFunc::draw_game()
@@ -118,6 +130,36 @@ void GraphicFunc::draw_game()
       mvprintw((2*(rows/3) + 2*((rows/3)/3)), i, "^");
   }
   attroff(COLOR_PAIR(REGISTER));
+  attron(COLOR_PAIR(WINDOW));
+  for(int i = 0.8*columns; i<(columns-2); i++)
+  {
+    for(int j = 2; j<(rows-2); j++)
+    {
+      mvprintw(j, i, " ");
+    }
+  }
+  for(int i = ((0.8*columns) + 1); i<(columns-3); i++)
+  {
+      mvprintw(3, i, "-");
+  }
+  for(int i = ((0.8*columns) + 1); i<(columns-3); i++)
+  {
+      mvprintw(12, i, "-");
+  }
+  for(int i = ((0.8*columns) + 1); i<(columns-3); i++)
+  {
+      mvprintw(18, i, "-");
+  }
+  mvprintw(4, 0.89*columns, "Menu");
+  mvprintw(13, 0.88*columns, "Pracownicy");
+  mvprintw(19, 0.89*columns, "Legenda");
+  mvprintw(21, 0.86*columns, "Pracownicy:");
+  mvprintw(22, 0.86*columns, "Klienici:");
+  attroff(COLOR_PAIR(WINDOW));
+  attron(COLOR_PAIR(THREADS));
+  mvprintw(21, 0.93*columns, "%s", objects[0].c_str());
+  mvprintw(22, 0.93*columns, "%s", objects[1].c_str());
+  attroff(COLOR_PAIR(THREADS));
 }
 
 void GraphicFunc::check_size()

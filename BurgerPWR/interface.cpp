@@ -117,7 +117,7 @@ bool Interface::set_up()
           {
             case 0:
             {
-              new GameMaster();
+              new GameMaster(highscore, prices, production, pay, workers);
               return true;
             } break;
             case 4: set_prices(); break;

@@ -1,7 +1,6 @@
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
-#include <iostream>
 #include "gamemaster.h"
 
 using namespace std;
@@ -11,8 +10,6 @@ class Interface: public GraphicFunc
 private:
   //Zmienne
   int workers = 3;
-  const int clients = 12;
-  int existing_clients = 0;
   int pay = 15;
   string selection = "🍔";
   bool highscore = false;
