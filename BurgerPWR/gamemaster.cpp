@@ -66,6 +66,7 @@ void GameMaster::calculate_cost()
 
 void GameMaster::main_loop()
 {
+  side_UI();
   while(!end)
   {
     refresh_bar();
@@ -74,7 +75,6 @@ void GameMaster::main_loop()
     mvprintw(rows - 1, 0, "Przychód: %d$ \t\t Straty: %d$", income, loss);
     mvprintw(rows - 1, columns - 20, "Budżet: %d$", budget);
     calculate_cost();
-    side_UI();
     timer();
     attroff(COLOR_PAIR(INFO_BAR));
     this_thread::sleep_for(chrono::milliseconds(800));
@@ -110,6 +110,7 @@ void GameMaster::check_keyboard()
         if(current == 0) current = 6;
         else current--;
         choice[current] = selection;
+        side_UI();
       } break;
       case KEY_DOWN:
       {
@@ -117,6 +118,7 @@ void GameMaster::check_keyboard()
           if(current == 6) current = 0;
           else current++;
           choice[current] = selection;
+          side_UI();
       } break;
       case KEY_LEFT:
       {
@@ -129,6 +131,7 @@ void GameMaster::check_keyboard()
           case 4: if(prices[4] - 1 > 4) prices[4]--; break;
           case 6: if(pay - 1 > 7) pay--; break;
         }
+        side_UI();
       } break;
       case KEY_RIGHT:
       {
@@ -141,6 +144,7 @@ void GameMaster::check_keyboard()
             case 4: if(prices[4] + 1 < 21) prices[4]++; break;
             case 6: if(pay + 1 < 25) pay++; break;
           }
+          side_UI();
       } break;
     }
     this_thread::sleep_for(chrono::milliseconds(10));
