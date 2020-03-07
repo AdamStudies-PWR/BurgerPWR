@@ -4,15 +4,21 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+        client.cpp \
         gamemaster.cpp \
         graphicfunc.cpp \
         interface.cpp \
-        main.cpp
+        main.cpp \
+        objects.cpp \
+        worker.cpp
 
 HEADERS += \
+    client.h \
     gamemaster.h \
     graphicfunc.h \
-    interface.h
+    interface.h \
+    objects.h \
+    worker.h
 
 INCLUDEPATH += -L/usr/lib/headers/
 LIBS += -L/usr/lib -lncurses
