@@ -8,7 +8,7 @@ GraphicFunc::GraphicFunc()
   init_pair(REGISTER, COLOR_RED, COLOR_YELLOW);
   init_pair(SIT, COLOR_BLACK, COLOR_YELLOW);
   init_pair(WINDOW, COLOR_RED, COLOR_WHITE);
-  init_pair(THREADS, COLOR_BLACK, COLOR_BLUE);
+  init_pair(THREADS, COLOR_BLACK, COLOR_WHITE);
 }
 
 void GraphicFunc::refresh_bar()
@@ -154,7 +154,7 @@ void GraphicFunc::draw_game()
   mvprintw(13, 0.88*columns, "Pracownicy");
   mvprintw(19, 0.89*columns, "Legenda");
   mvprintw(21, 0.86*columns, "Pracownicy:");
-  mvprintw(22, 0.86*columns, "Klienici:");
+  mvprintw(22, 0.86*columns, "Klienci:");
   attroff(COLOR_PAIR(WINDOW));
   attron(COLOR_PAIR(THREADS));
   mvprintw(21, 0.93*columns, "%s", objects[0].c_str());

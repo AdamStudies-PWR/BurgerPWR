@@ -28,7 +28,7 @@ private:
   int current = 0;
   string selection = "🍔";
   string choice[7] = {selection, "  ", "  ", "  ", "  ", "  ", "  "};
-  string emoji[7] = {"🍔", "🍟", "🥤", "🍕", "🥙", "if", "💵"};
+  string emoji[7] = {"🍔", "🍟", "🥤", "🍕", "🥙", "🧢", "💵"};
   //metody
   void main_loop();
   void check_keyboard();
