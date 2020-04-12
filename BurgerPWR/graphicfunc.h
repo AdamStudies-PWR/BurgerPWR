@@ -2,6 +2,8 @@
 #define GRAPHICFUNC_H
 
 #include "ncurses.h"
+//#include "worker.h"
+#include "client.h"
 #include <iostream>
 
 #define TITLE 1

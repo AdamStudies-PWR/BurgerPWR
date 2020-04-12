@@ -1,6 +1,6 @@
 #include "gamemaster.h"
 
-GameMaster::GameMaster(bool mode, int prices[], int cost[], int pay, int workers)
+GameMaster::GameMaster(bool mode, int prices[], int cost[], int pay, int max_workers)
 {
   this->mode = mode;
   for(int i=0; i<5; i++)
@@ -9,10 +9,11 @@ GameMaster::GameMaster(bool mode, int prices[], int cost[], int pay, int workers
     this->cost[i] = cost[i];
   }
   this->pay = pay;
-  this->workers = workers;
+  this->max_workers = max_workers;
   draw_game();
   nodelay(stdscr, true);
   thread keyboard(&GameMaster::check_keyboard, this);
+  //for(int i=0; i<max_workers; i++) {}
   keyboard.detach();
   main_loop();
 }
@@ -58,7 +59,7 @@ void GameMaster::calculate_cost()
   if(labor != hour[1])
   {
     labor = hour[1];
-    loss = workers * pay;
+    loss = max_workers * pay;
   }
   else loss = 0;
   budget = budget - loss;
@@ -91,7 +92,7 @@ void GameMaster::side_UI()
   mvprintw(9,0.85*columns,"%s Pizza:\t[%s]\t%d$ ", emoji[3].c_str(), choice[3].c_str(),prices[3]);
   mvprintw(10,0.85*columns,"%s Kebab:\t[%s]\t%d$ ", emoji[4].c_str(), choice[4].c_str(),prices[4]);
   //Parcownicy
-  mvprintw(15,0.85*columns,"%s Prac:\t[%s]\t%d ", emoji[5].c_str(), choice[5].c_str(),workers);
+  mvprintw(15,0.85*columns,"%s Ilość:\t[%s]\t%d ", emoji[5].c_str(), choice[5].c_str(), max_workers);
   mvprintw(16,0.85*columns,"%s Pensja:\t[%s]\t%d$/h ", emoji[6].c_str(), choice[6].c_str(),pay);
   attroff(COLOR_PAIR(WINDOW));
 }

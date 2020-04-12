@@ -15,10 +15,11 @@ private:
   int prices[5];
   int cost[5];
   int pay;
-  int workers;
+  int max_workers;
   //zmienne
-  int labor = 0;
+
   bool end = false;
+  int labor = 0;
   int income = 0;
   int loss = 0;
   int budget = 10000;
@@ -26,6 +27,7 @@ private:
   int minutes[2] = {0, 0};
   int day[4] = {0, 0, 0, 0};
   int current = 0;
+
   string selection = "🍔";
   string choice[7] = {selection, "  ", "  ", "  ", "  ", "  ", "  "};
   string emoji[7] = {"🍔", "🍟", "🥤", "🍕", "🥙", "🧢", "💵"};
