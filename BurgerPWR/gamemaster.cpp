@@ -14,7 +14,11 @@ GameMaster::GameMaster(bool mode, int prices[], int cost[], int pay, int max_wor
   this->max_workers = max_workers;
   draw_game();
   nodelay(stdscr, true);
-  //for(int i=0; i<max_workers; i++) workers.emplace_back(new Worker(i, ref(this)));
+  for(int i=0; i<max_workers; i++)
+  {
+      Worker *w = new Worker(i, this);
+      workers.emplace_back(&Worker::main_loop, w);
+  }
   //for(int i=0; i<max_workers; i++) workers[i].detach();
   thread keyboard(&GameMaster::check_keyboard, this);
   keyboard.detach();
@@ -71,6 +75,7 @@ void GameMaster::calculate_cost()
 void GameMaster::main_loop()
 {
   side_UI();
+  resources_info();
   while(!end)
   {
     refresh_bar();
@@ -98,6 +103,20 @@ void GameMaster::side_UI()
   mvprintw(15,0.85*columns,"%s Ilość:\t[%s]\t%d ", emoji[5].c_str(), choice[5].c_str(), max_workers);
   mvprintw(16,0.85*columns,"%s Pensja:\t[%s]\t%d$/h ", emoji[6].c_str(), choice[6].c_str(),pay);
   attroff(COLOR_PAIR(WINDOW));
+}
+
+void GameMaster::resources_info()
+{
+    attron(COLOR_PAIR(WINDOW));
+    mvprintw(21 ,0.86*columns,"%s Bułka:\t\t%d", res_emoji[0].c_str(), available[0]);
+    mvprintw(22 ,0.86*columns,"%s Mięso:\t\t%d", res_emoji[1].c_str(), available[1]);
+    mvprintw(23 ,0.86*columns,"%s Sałata:\t\t%d", res_emoji[2].c_str(), available[2]);
+    mvprintw(24 ,0.86*columns,"%s Pomidor:\t\t%d", res_emoji[3].c_str(), available[3]);
+    mvprintw(25 ,0.86*columns,"%s Ziemniaki:\t%d", res_emoji[4].c_str(), available[4]);
+    mvprintw(26 ,0.86*columns,"%s  Ciasto:\t\t%d", res_emoji[5].c_str(), available[5]);
+    mvprintw(27 ,0.86*columns,"%s Ser:\t\t%d", res_emoji[6].c_str(), available[6]);
+    mvprintw(28 ,0.86*columns,"%s Szynka:\t\t%d", res_emoji[7].c_str(), available[7]);
+    attroff(COLOR_PAIR(WINDOW));
 }
 
 void GameMaster::check_keyboard()
@@ -159,6 +178,11 @@ void GameMaster::check_keyboard()
 bool GameMaster::getEnd() {return end;}
 void GameMaster::setEnd(bool end) {this->end = end;}
 
+Worker::~Worker()
+{
+    delete master;
+}
+
 Worker::Worker(int index, GameMaster *master)
 {
     this->master = master;
@@ -167,9 +191,10 @@ Worker::Worker(int index, GameMaster *master)
 
 void Worker::main_loop()
 {
-    while(master->getEnd())
+    //mvprintw((index + 1)*2, 20, "Tutaj jestem: %d", index);
+    while(!master->getEnd())
     {
-
-        this_thread::sleep_for(chrono::milliseconds(50));
+        //mvprintw((index + 1)*2, 40, "Pętla: %d", index);
+        this_thread::sleep_for(chrono::milliseconds((index + 1) * 10));
     }
 }

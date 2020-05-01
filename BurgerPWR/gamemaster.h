@@ -11,6 +11,7 @@ class GameMaster: public Utility
 {
 private:
   //zmienne rozgrywki
+  mutex mx;
   bool mode;
   const int max_clients = 16;
   int clients = 0;
@@ -34,6 +35,9 @@ private:
   string selection = "🍔";
   string choice[7] = {selection, "  ", "  ", "  ", "  ", "  ", "  "};
   string emoji[7] = {"🍔", "🍟", "🥤", "🍕", "🥙", "🧢", "💵"};
+  string res_emoji[8] = {"🍞", "🥩", "🥗", "🍅", "🥔", "♨️", "🧀", "🥓"};
+
+  int available[8] = {4, 4, 4, 4, 4, 4, 4, 4};
 
   //metody
   void main_loop();
@@ -41,6 +45,7 @@ private:
   void timer();
   void calculate_cost();
   void side_UI();
+  void resources_info();
 public:
   bool getEnd();
   void setEnd(bool end);
@@ -56,8 +61,10 @@ private:
     int state = 0;
 public:
     Worker(int index, GameMaster *master);
-private:
+    ~Worker();
+
     void main_loop();
+private:
 };
 
 #endif // GAMEMASTER_H
