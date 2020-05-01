@@ -3,9 +3,11 @@
 
 #include <thread>
 #include <chrono>
-#include "graphicfunc.h"
+#include "utility.h"
+#include <vector>
+#include <mutex>
 
-class GameMaster: public GraphicFunc
+class GameMaster: public Utility
 {
 private:
   //zmienne rozgrywki
@@ -17,6 +19,7 @@ private:
   int pay;
   int max_workers;
   //zmienne
+  vector<thread> workers;
 
   bool end = false;
   int labor = 0;
@@ -31,6 +34,7 @@ private:
   string selection = "🍔";
   string choice[7] = {selection, "  ", "  ", "  ", "  ", "  ", "  "};
   string emoji[7] = {"🍔", "🍟", "🥤", "🍕", "🥙", "🧢", "💵"};
+
   //metody
   void main_loop();
   void check_keyboard();
@@ -41,6 +45,19 @@ public:
   bool getEnd();
   void setEnd(bool end);
   GameMaster(bool mode, int prices[5], int cost[5], int pay, int workers);
+  GameMaster();
+};
+
+class Worker
+{
+private:
+    GameMaster *master;
+    int index;
+    int state = 0;
+public:
+    Worker(int index, GameMaster *master);
+private:
+    void main_loop();
 };
 
 #endif // GAMEMASTER_H

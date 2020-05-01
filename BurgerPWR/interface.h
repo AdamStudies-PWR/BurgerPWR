@@ -5,7 +5,7 @@
 
 using namespace std;
 
-class Interface: public GraphicFunc
+class Interface: public Utility
 {
 private:
   //Zmienne

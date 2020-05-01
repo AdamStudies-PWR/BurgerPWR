@@ -1,5 +1,7 @@
 #include "gamemaster.h"
 
+GameMaster::GameMaster() {}
+
 GameMaster::GameMaster(bool mode, int prices[], int cost[], int pay, int max_workers)
 {
   this->mode = mode;
@@ -12,8 +14,9 @@ GameMaster::GameMaster(bool mode, int prices[], int cost[], int pay, int max_wor
   this->max_workers = max_workers;
   draw_game();
   nodelay(stdscr, true);
+  //for(int i=0; i<max_workers; i++) workers.emplace_back(new Worker(i, ref(this)));
+  //for(int i=0; i<max_workers; i++) workers[i].detach();
   thread keyboard(&GameMaster::check_keyboard, this);
-  //for(int i=0; i<max_workers; i++) {}
   keyboard.detach();
   main_loop();
 }
@@ -155,3 +158,18 @@ void GameMaster::check_keyboard()
 //Utility func
 bool GameMaster::getEnd() {return end;}
 void GameMaster::setEnd(bool end) {this->end = end;}
+
+Worker::Worker(int index, GameMaster *master)
+{
+    this->master = master;
+    this->index = index;
+}
+
+void Worker::main_loop()
+{
+    while(master->getEnd())
+    {
+
+        this_thread::sleep_for(chrono::milliseconds(50));
+    }
+}

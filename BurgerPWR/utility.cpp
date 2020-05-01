@@ -1,6 +1,6 @@
-#include "graphicfunc.h"
+#include "utility.h"
 
-GraphicFunc::GraphicFunc()
+Utility::Utility()
 {
   init_pair(TITLE, COLOR_RED, COLOR_BLACK);
   init_pair(INFO_BAR, COLOR_WHITE, COLOR_RED);
@@ -11,7 +11,7 @@ GraphicFunc::GraphicFunc()
   init_pair(THREADS, COLOR_BLACK, COLOR_WHITE);
 }
 
-void GraphicFunc::refresh_bar()
+void Utility::refresh_bar()
 {
   attron(COLOR_PAIR(INFO_BAR));
   for(int i=0; i<columns; i++)
@@ -21,7 +21,7 @@ void GraphicFunc::refresh_bar()
   attroff(COLOR_PAIR(INFO_BAR));
 }
 
-void GraphicFunc::draw_game()
+void Utility::draw_game()
 {
   clear();
   check_size();
@@ -162,12 +162,12 @@ void GraphicFunc::draw_game()
   attroff(COLOR_PAIR(THREADS));
 }
 
-void GraphicFunc::check_size()
+void Utility::check_size()
 {
   getmaxyx(stdscr, rows, columns);
 }
 
-void GraphicFunc::print_title()
+void Utility::print_title()
 {
   attron(COLOR_PAIR(TITLE));
   mvprintw(rows/3 - 7, columns/2 - 53, ".______    __    __  .______        _______  _______ .______      .______  ____    __    ____ .______");

@@ -2,8 +2,6 @@
 #define GRAPHICFUNC_H
 
 #include "ncurses.h"
-//#include "worker.h"
-#include "client.h"
 #include <iostream>
 
 #define TITLE 1
@@ -16,10 +14,10 @@
 
 using namespace std;
 
-class GraphicFunc
+class Utility
 {
 public:
-  GraphicFunc();
+  Utility();
   string objects[2] = {" 🧢 ", " 🤡 "};
 protected:
   int rows = 0;
