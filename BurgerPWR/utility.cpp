@@ -150,20 +150,15 @@ void Utility::draw_game()
   {
       mvprintw(18, i, "-");
   }
-  for(int i = ((0.8*columns) + 1); i<(columns-3); i++)
-  {
-      mvprintw(30, i, "-");
-  }
   mvprintw(4, 0.89*columns, "Menu");
   mvprintw(13, 0.88*columns, "Pracownicy");
-  mvprintw(19, 0.89*columns, "Zasoby");
-  mvprintw(31, 0.89*columns, "Legenda");
-  mvprintw(33, 0.86*columns, "Pracownicy:");
-  mvprintw(34, 0.86*columns, "Klienci:");
+  mvprintw(19, 0.89*columns, "Legenda");
+  mvprintw(21, 0.86*columns, "Pracownicy:");
+  mvprintw(22, 0.86*columns, "Klienci:");
   attroff(COLOR_PAIR(WINDOW));
   attron(COLOR_PAIR(THREADS));
-  mvprintw(33, 0.93*columns, "%s", objects[0].c_str());
-  mvprintw(34, 0.93*columns, "%s", objects[1].c_str());
+  mvprintw(21, 0.93*columns, "%s", objects[0].c_str());
+  mvprintw(22, 0.93*columns, "%s", objects[1].c_str());
   attroff(COLOR_PAIR(THREADS));
 }
 
@@ -182,4 +177,126 @@ void Utility::print_title()
   mvprintw(rows/3 - 3, columns/2 - 53, "|  |_)  | |  `--'  | |  |\\  \\----.|  |__| | |  |____ |  |\\  \\----.|  |        \\    /\\    /    |  |\\  \\----.");
   mvprintw(rows/3 - 2, columns/2 - 53, "|______/   \\______/  | _| `._____| \\______| |_______|| _| `._____|| _|         \\__/  \\__/     | _| `._____|");
   attroff(COLOR_PAIR(TITLE));
+}
+
+void Utility::draw_cash(int index)
+{
+   //m.lock();
+   attron(COLOR_PAIR(THREADS));
+   float location = 0;
+   switch (index)
+   {
+       case 1: location = 0.58 * columns; break;
+       case 2: location = 0.62 * columns; break;
+       case 3: location = 0.65 * columns;
+   }
+   mvprintw(2*(rows/3) + 1, location, "%s", objects[0].c_str());
+   attroff(COLOR_PAIR(THREADS));
+   //m.unlock();
+}
+
+void Utility::clear_cash(int index)
+{
+   //m.lock();
+   attron(COLOR_PAIR(TITLE));
+   float location = 0;
+   switch (index)
+   {
+       case 1: location = 0.58 * columns; break;
+       case 2: location = 0.62 * columns; break;
+       case 3: location = 0.65 * columns;
+   }
+   mvprintw(2*(rows/3) + 1, location, "    ");
+   attroff(COLOR_PAIR(TITLE));
+   //m.unlock();
+}
+
+void Utility::draw_petent(int index)
+{
+   //m.lock();
+   attron(COLOR_PAIR(THREADS));
+   float location = 0;
+   switch (index)
+   {
+       case 1: location = 0.58 * columns; break;
+       case 2: location = 0.62 * columns; break;
+       case 3: location = 0.65 * columns;
+   }
+   mvprintw(2*(rows/3) - 1, location, "%s", objects[1].c_str());
+   attroff(COLOR_PAIR(THREADS));
+   //m.unlock();
+}
+
+
+void Utility::draw_line(int length)
+{
+    //m.lock();
+    attron(COLOR_PAIR(THREADS));
+    int i = 0;
+    for(; i<length; i++)
+    {
+        mvprintw((2*(rows/3) + 0.2*rows + i), 0.66*columns, objects[0].c_str());
+    }
+    attroff(COLOR_PAIR(THREADS));
+    attron(COLOR_PAIR(TITLE));
+    for(; i<6; i++)
+    {
+        mvprintw((2*(rows/3) + 0.2*rows + i), 0.66*columns, "    ");
+    }
+    attroff(COLOR_PAIR(TITLE));
+    //m.unlock();
+}
+
+void Utility::draw_line2(int length)
+{
+    //m.lock();
+    attron(COLOR_PAIR(THREADS));
+    int i = 0;
+    for(; i<length; i++)
+    {
+        mvprintw((2*(rows/3) - 4 - i), 0.65*columns, objects[1].c_str());
+    }
+    attroff(COLOR_PAIR(THREADS));
+    attron(COLOR_PAIR(TITLE));
+    for(; i<16; i++)
+    {
+        mvprintw((2*(rows/3) -4 - i), 0.65*columns, "    ");
+    }
+    attroff(COLOR_PAIR(TITLE));
+    //m.unlock();
+}
+
+void Utility::clear_petent(int index)
+{
+    //m.lock();
+    attron(COLOR_PAIR(TITLE));
+    float location = 0;
+    switch (index)
+    {
+        case 1: location = 0.58 * columns; break;
+        case 2: location = 0.62 * columns; break;
+        case 3: location = 0.65 * columns;
+    }
+    mvprintw(2*(rows/3) - 1, location, "    ");
+    attroff(COLOR_PAIR(TITLE));
+    //m.unlock();
+}
+
+void Utility::draw_line3(int length)
+{
+    //m.lock();
+    attron(COLOR_PAIR(THREADS));
+    int i = 0;
+    for(; i<length; i++)
+    {
+        mvprintw((2*(rows/3) - 4 - i), 0.53*columns, objects[1].c_str());
+    }
+    attroff(COLOR_PAIR(THREADS));
+    attron(COLOR_PAIR(TITLE));
+    for(; i<16; i++)
+    {
+        mvprintw((2*(rows/3) -4 - i), 0.53*columns, "    ");
+    }
+    attroff(COLOR_PAIR(TITLE));
+    //m.unlock();
 }

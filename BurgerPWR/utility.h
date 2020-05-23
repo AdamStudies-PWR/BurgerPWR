@@ -3,6 +3,7 @@
 
 #include "ncurses.h"
 #include <iostream>
+#include <mutex>
 
 #define TITLE 1
 #define INFO_BAR 2
@@ -19,6 +20,14 @@ class Utility
 public:
   Utility();
   string objects[2] = {" 🧢 ", " 🤡 "};
+  void draw_cash(int index);
+  void clear_cash(int index);
+  void draw_petent(int index);
+  void clear_petent(int index);
+  void draw_line(int length);
+  void draw_line2(int length);
+  void draw_line3(int length);
+  mutex m;
 protected:
   int rows = 0;
   int columns = 0;

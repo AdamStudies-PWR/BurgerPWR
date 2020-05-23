@@ -4,7 +4,9 @@ GameMaster::GameMaster() {}
 
 GameMaster::GameMaster(bool mode, int prices[], int cost[], int pay, int max_workers)
 {
-  this->mode = mode;
+  k1 = new kasa(1);
+  k2 = new kasa(2);
+  k3 = new kasa(3);
   for(int i=0; i<5; i++)
   {
     this->prices[i] = prices[i];
@@ -13,16 +15,25 @@ GameMaster::GameMaster(bool mode, int prices[], int cost[], int pay, int max_wor
   this->pay = pay;
   this->max_workers = max_workers;
   draw_game();
+  side_UI();
   nodelay(stdscr, true);
   for(int i=0; i<max_workers; i++)
   {
-      Worker *w = new Worker(i, this);
+      Worker *w = new Worker(i, this, k1, k2, k3);
       workers.emplace_back(&Worker::main_loop, w);
   }
-  //for(int i=0; i<max_workers; i++) workers[i].detach();
+  for(int i=0; i<max_workers; i++) workers[i].detach();
   thread keyboard(&GameMaster::check_keyboard, this);
   keyboard.detach();
   main_loop();
+}
+
+GameMaster::~GameMaster()
+{
+    end = true;
+    delete k1;
+    delete k2;
+    delete k3;
 }
 
 void GameMaster::timer()
@@ -69,15 +80,16 @@ void GameMaster::calculate_cost()
     loss = max_workers * pay;
   }
   else loss = 0;
-  budget = budget - loss;
+  budget = budget - loss + income;
+  income = 0;
 }
 
 void GameMaster::main_loop()
 {
-  side_UI();
-  resources_info();
+  int randw;
   while(!end)
   {
+    this_thread::sleep_for(chrono::milliseconds(1000));
     refresh_bar();
     attron(COLOR_PAIR(INFO_BAR));
     mvprintw(0, 0, "Dzień: %d%d%d%d   Czas: %d%d:%d%d", day[0], day[1], day[2], day[3], hour[0], hour[1], minutes[0], minutes[1]);
@@ -85,9 +97,22 @@ void GameMaster::main_loop()
     mvprintw(rows - 1, columns - 20, "Budżet: %d$", budget);
     calculate_cost();
     timer();
+    if(clients < max_clients)
+    {
+        randw = rand() % 5;
+        if(randw == 1) start_client();
+    }
     attroff(COLOR_PAIR(INFO_BAR));
-    this_thread::sleep_for(chrono::milliseconds(800));
   }
+}
+
+void GameMaster::start_client()
+{
+    clients++;
+    Client *c = new Client(history, this, k1, k2, k3);
+    history++;
+    thread cli(&Client::main_loop, c);
+    cli.detach();
 }
 
 void GameMaster::side_UI()
@@ -103,20 +128,6 @@ void GameMaster::side_UI()
   mvprintw(15,0.85*columns,"%s Ilość:\t[%s]\t%d ", emoji[5].c_str(), choice[5].c_str(), max_workers);
   mvprintw(16,0.85*columns,"%s Pensja:\t[%s]\t%d$/h ", emoji[6].c_str(), choice[6].c_str(),pay);
   attroff(COLOR_PAIR(WINDOW));
-}
-
-void GameMaster::resources_info()
-{
-    attron(COLOR_PAIR(WINDOW));
-    mvprintw(21 ,0.86*columns,"%s Bułka:\t\t%d", res_emoji[0].c_str(), available[0]);
-    mvprintw(22 ,0.86*columns,"%s Mięso:\t\t%d", res_emoji[1].c_str(), available[1]);
-    mvprintw(23 ,0.86*columns,"%s Sałata:\t\t%d", res_emoji[2].c_str(), available[2]);
-    mvprintw(24 ,0.86*columns,"%s Pomidor:\t\t%d", res_emoji[3].c_str(), available[3]);
-    mvprintw(25 ,0.86*columns,"%s Ziemniaki:\t%d", res_emoji[4].c_str(), available[4]);
-    mvprintw(26 ,0.86*columns,"%s  Ciasto:\t\t%d", res_emoji[5].c_str(), available[5]);
-    mvprintw(27 ,0.86*columns,"%s Ser:\t\t%d", res_emoji[6].c_str(), available[6]);
-    mvprintw(28 ,0.86*columns,"%s Szynka:\t\t%d", res_emoji[7].c_str(), available[7]);
-    attroff(COLOR_PAIR(WINDOW));
 }
 
 void GameMaster::check_keyboard()
@@ -183,18 +194,263 @@ Worker::~Worker()
     delete master;
 }
 
-Worker::Worker(int index, GameMaster *master)
+Worker::Worker(int index, GameMaster *master, kasa *k1, kasa *k2, kasa *k3)
 {
+    this->k1 = k1;
+    this->k2 = k2;
+    this->k3 = k3;
     this->master = master;
     this->index = index;
 }
 
 void Worker::main_loop()
 {
-    //mvprintw((index + 1)*2, 20, "Tutaj jestem: %d", index);
     while(!master->getEnd())
     {
-        //mvprintw((index + 1)*2, 40, "Pętla: %d", index);
-        this_thread::sleep_for(chrono::milliseconds((index + 1) * 10));
+        switch(state)
+        {
+            case 0: begin(); break;
+            case 1: wait(); break;
+            case 2: take_order(); break;
+        }
+        this_thread::sleep_for(chrono::seconds(2));
     }
+}
+
+void Worker::take_order()
+{
+    if(chosen->isready)
+    {
+        unique_lock<mutex> locker(k1->m, defer_lock);
+        locker.lock();
+        order = chosen->order;
+        master->clear_cash(chosen->index);
+        time = 2*order[0];
+        chosen->busy = false;
+        state = 3;
+        locker.unlock();
+    }
+}
+
+void Worker::begin()
+{
+    if(!k1->busy)
+    {
+        unique_lock<mutex> locker(k1->m, defer_lock);
+        locker.lock();
+        state = 2;
+        k1->busy = true;
+        k1->take = false;
+        chosen = k1;
+        locker.unlock();
+        master->draw_cash(k1->index);
+    }
+    else if(!k2->busy)
+    {
+        unique_lock<mutex> locker(k1->m, defer_lock);
+        locker.lock();
+        state = 2;
+        k2->busy = true;
+        k2->take = false;
+        chosen = k2;
+        locker.unlock();
+        master->draw_cash(k2->index);
+    }
+    else if(!k3->busy)
+    {
+        unique_lock<mutex> locker(k1->m, defer_lock);
+        locker.lock();
+        state = 2;
+        k3->busy = true;
+        k3->take = false;
+        chosen = k3;
+        locker.unlock();
+        master->draw_cash(k3->index);
+    }
+    else
+    {
+        state = 1;
+        master->line++;
+        master->draw_line(master->line);
+    }
+}
+
+void Worker::wait()
+{
+    if(!k1->busy)
+    {
+        unique_lock<mutex> locker(k1->m, defer_lock);
+        locker.lock();
+        state = 2;
+        k1->busy = true;
+        k1->take = false;
+        chosen = k1;
+        locker.unlock();
+        master->draw_cash(k1->index);
+        master->line--;
+        master->draw_line(master->line);
+    }
+    else if(!k2->busy)
+    {
+        unique_lock<mutex> locker(k1->m, defer_lock);
+        locker.lock();
+        state = 2;
+        k2->busy = true;
+        k2->take = false;
+        chosen = k2;
+        locker.unlock();
+        master->draw_cash(k2->index);
+        master->line--;
+        master->draw_line(master->line);
+    }
+    else if(!k3->busy)
+    {
+        unique_lock<mutex> locker(k1->m, defer_lock);
+        locker.lock();
+        state = 2;
+        k3->busy = true;
+        k3->take = false;
+        chosen = k3;
+        locker.unlock();
+        master->draw_cash(k3->index);
+        master->line--;
+        master->draw_line(master->line);
+    }
+}
+
+Client::~Client()
+{
+    delete master;
+}
+
+Client::Client(int index, GameMaster *master, kasa *k1, kasa *k2, kasa *k3)
+{
+    this->k1 = k1;
+    this->k2 = k2;
+    this->k3 = k3;
+    this->master = master;
+    this->index = index;
+}
+
+void Client::main_loop()
+{
+    while(!master->getEnd())
+    {
+        switch(state)
+        {
+            case 0: begin(); break;
+            case 1: wait(); break;
+            case 2: give_order(); break;
+            case 3: wait2(); break;
+        }
+        this_thread::sleep_for(chrono::seconds(2));
+    }
+}
+
+void Client::begin()
+{
+    if(!k1->take)
+    {
+        unique_lock<mutex> locker(k1->m, defer_lock);
+        locker.lock();
+        state = 2;
+        k1->take = true;
+        chosen = k1;
+        locker.unlock();
+        master->draw_petent(k1->index);
+    }
+    else if(!k2->take)
+    {
+        unique_lock<mutex> locker(k1->m, defer_lock);
+        locker.lock();
+        state = 2;
+        k2->take = true;
+        chosen = k2;
+        locker.unlock();
+        master->draw_petent(k2->index);
+    }
+    else if(!k3->take)
+    {
+        unique_lock<mutex> locker(k1->m, defer_lock);
+        locker.lock();
+        state = 2;
+        k3->take = true;
+        chosen = k3;
+        locker.unlock();
+        master->draw_petent(k3->index);
+    }
+    else
+    {
+        state = 1;
+        master->line2++;
+        master->draw_line2(master->line2);
+    }
+}
+
+void Client::wait()
+{
+    if(!k1->take)
+    {
+        unique_lock<mutex> locker(k1->m, defer_lock);
+        locker.lock();
+        state = 2;
+        k1->take = true;
+        chosen = k1;
+        locker.unlock();
+        master->draw_petent(k1->index);
+        master->line2--;
+        master->draw_line(master->line2);
+    }
+    else if(!k2->take)
+    {
+        unique_lock<mutex> locker(k1->m, defer_lock);
+        locker.lock();
+        state = 2;
+        k2->take = true;
+        chosen = k2;
+        locker.unlock();
+        master->draw_petent(k2->index);
+        master->line2--;
+        master->draw_line(master->line2);
+    }
+    else if(!k3->take)
+    {
+        unique_lock<mutex> locker(k1->m, defer_lock);
+        locker.lock();
+        state = 2;
+        k3->take = true;
+        chosen = k3;
+        locker.unlock();
+        master->draw_petent(k3->index);
+        master->line2--;
+        master->draw_line(master->line2);
+    }
+}
+
+void Client::give_order()
+{
+    //if(order != NULL) delete order;
+    int size = (rand() % 3) + 1;
+    order = new int[size + 2];
+    order[0] = size + 2;
+    order[1] = index;
+    for(int i=0; i<size; i++)
+    {
+        order[i + 2] = (rand() % 5);
+    }
+    unique_lock<mutex> locker(k1->m, defer_lock);
+    locker.lock();
+    chosen->order = order;
+    chosen->isready = true;
+    chosen->payed = false;
+    master->clear_petent(chosen->index);
+    state = 3;
+    locker.unlock();
+    master->line3++;
+    master->draw_line3(master->line3);
+}
+
+void Client::wait2()
+{
+
 }
