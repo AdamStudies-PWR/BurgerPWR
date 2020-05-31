@@ -12,6 +12,7 @@
 #define REGISTER 5
 #define SIT 6
 #define WINDOW 7
+#define TEXT 8
 
 using namespace std;
 
@@ -24,6 +25,10 @@ public:
   void clear_cash(int index);
   void draw_petent(int index);
   void clear_petent(int index);
+  void draw_cook(int index);
+  void update_cook(int index, float progress);
+  void clear_cook(int index);
+  void draw_take();
   void draw_line(int length);
   void draw_line2(int length);
   void draw_line3(int length);

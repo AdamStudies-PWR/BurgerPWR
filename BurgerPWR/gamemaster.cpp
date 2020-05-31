@@ -7,6 +7,18 @@ GameMaster::GameMaster(bool mode, int prices[], int cost[], int pay, int max_wor
   k1 = new kasa(1);
   k2 = new kasa(2);
   k3 = new kasa(3);
+
+  c1 = new kitchen(1);
+  c2 = new kitchen(2);
+  c3 = new kitchen(3);
+  c4 = new kitchen(4);
+  c5 = new kitchen(5);
+  c6 = new kitchen(6);
+  c7 = new kitchen(7);
+  c8 = new kitchen(8);
+
+  tk = new takeaway();
+
   for(int i=0; i<5; i++)
   {
     this->prices[i] = prices[i];
@@ -19,7 +31,7 @@ GameMaster::GameMaster(bool mode, int prices[], int cost[], int pay, int max_wor
   nodelay(stdscr, true);
   for(int i=0; i<max_workers; i++)
   {
-      Worker *w = new Worker(i, this, k1, k2, k3);
+      Worker *w = new Worker(i, this, k1, k2, k3, c1, c2, c3, c4, c5, c6, c7, c8, tk);
       workers.emplace_back(&Worker::main_loop, w);
   }
   for(int i=0; i<max_workers; i++) workers[i].detach();
@@ -188,269 +200,3 @@ void GameMaster::check_keyboard()
 //Utility func
 bool GameMaster::getEnd() {return end;}
 void GameMaster::setEnd(bool end) {this->end = end;}
-
-Worker::~Worker()
-{
-    delete master;
-}
-
-Worker::Worker(int index, GameMaster *master, kasa *k1, kasa *k2, kasa *k3)
-{
-    this->k1 = k1;
-    this->k2 = k2;
-    this->k3 = k3;
-    this->master = master;
-    this->index = index;
-}
-
-void Worker::main_loop()
-{
-    while(!master->getEnd())
-    {
-        switch(state)
-        {
-            case 0: begin(); break;
-            case 1: wait(); break;
-            case 2: take_order(); break;
-        }
-        this_thread::sleep_for(chrono::seconds(2));
-    }
-}
-
-void Worker::take_order()
-{
-    if(chosen->isready)
-    {
-        unique_lock<mutex> locker(k1->m, defer_lock);
-        locker.lock();
-        order = chosen->order;
-        master->clear_cash(chosen->index);
-        time = 2*order[0];
-        chosen->busy = false;
-        state = 3;
-        locker.unlock();
-    }
-}
-
-void Worker::begin()
-{
-    if(!k1->busy)
-    {
-        unique_lock<mutex> locker(k1->m, defer_lock);
-        locker.lock();
-        state = 2;
-        k1->busy = true;
-        k1->take = false;
-        chosen = k1;
-        locker.unlock();
-        master->draw_cash(k1->index);
-    }
-    else if(!k2->busy)
-    {
-        unique_lock<mutex> locker(k1->m, defer_lock);
-        locker.lock();
-        state = 2;
-        k2->busy = true;
-        k2->take = false;
-        chosen = k2;
-        locker.unlock();
-        master->draw_cash(k2->index);
-    }
-    else if(!k3->busy)
-    {
-        unique_lock<mutex> locker(k1->m, defer_lock);
-        locker.lock();
-        state = 2;
-        k3->busy = true;
-        k3->take = false;
-        chosen = k3;
-        locker.unlock();
-        master->draw_cash(k3->index);
-    }
-    else
-    {
-        state = 1;
-        master->line++;
-        master->draw_line(master->line);
-    }
-}
-
-void Worker::wait()
-{
-    if(!k1->busy)
-    {
-        unique_lock<mutex> locker(k1->m, defer_lock);
-        locker.lock();
-        state = 2;
-        k1->busy = true;
-        k1->take = false;
-        chosen = k1;
-        locker.unlock();
-        master->draw_cash(k1->index);
-        master->line--;
-        master->draw_line(master->line);
-    }
-    else if(!k2->busy)
-    {
-        unique_lock<mutex> locker(k1->m, defer_lock);
-        locker.lock();
-        state = 2;
-        k2->busy = true;
-        k2->take = false;
-        chosen = k2;
-        locker.unlock();
-        master->draw_cash(k2->index);
-        master->line--;
-        master->draw_line(master->line);
-    }
-    else if(!k3->busy)
-    {
-        unique_lock<mutex> locker(k1->m, defer_lock);
-        locker.lock();
-        state = 2;
-        k3->busy = true;
-        k3->take = false;
-        chosen = k3;
-        locker.unlock();
-        master->draw_cash(k3->index);
-        master->line--;
-        master->draw_line(master->line);
-    }
-}
-
-Client::~Client()
-{
-    delete master;
-}
-
-Client::Client(int index, GameMaster *master, kasa *k1, kasa *k2, kasa *k3)
-{
-    this->k1 = k1;
-    this->k2 = k2;
-    this->k3 = k3;
-    this->master = master;
-    this->index = index;
-}
-
-void Client::main_loop()
-{
-    while(!master->getEnd())
-    {
-        switch(state)
-        {
-            case 0: begin(); break;
-            case 1: wait(); break;
-            case 2: give_order(); break;
-            case 3: wait2(); break;
-        }
-        this_thread::sleep_for(chrono::seconds(2));
-    }
-}
-
-void Client::begin()
-{
-    if(!k1->take)
-    {
-        unique_lock<mutex> locker(k1->m, defer_lock);
-        locker.lock();
-        state = 2;
-        k1->take = true;
-        chosen = k1;
-        locker.unlock();
-        master->draw_petent(k1->index);
-    }
-    else if(!k2->take)
-    {
-        unique_lock<mutex> locker(k1->m, defer_lock);
-        locker.lock();
-        state = 2;
-        k2->take = true;
-        chosen = k2;
-        locker.unlock();
-        master->draw_petent(k2->index);
-    }
-    else if(!k3->take)
-    {
-        unique_lock<mutex> locker(k1->m, defer_lock);
-        locker.lock();
-        state = 2;
-        k3->take = true;
-        chosen = k3;
-        locker.unlock();
-        master->draw_petent(k3->index);
-    }
-    else
-    {
-        state = 1;
-        master->line2++;
-        master->draw_line2(master->line2);
-    }
-}
-
-void Client::wait()
-{
-    if(!k1->take)
-    {
-        unique_lock<mutex> locker(k1->m, defer_lock);
-        locker.lock();
-        state = 2;
-        k1->take = true;
-        chosen = k1;
-        locker.unlock();
-        master->draw_petent(k1->index);
-        master->line2--;
-        master->draw_line(master->line2);
-    }
-    else if(!k2->take)
-    {
-        unique_lock<mutex> locker(k1->m, defer_lock);
-        locker.lock();
-        state = 2;
-        k2->take = true;
-        chosen = k2;
-        locker.unlock();
-        master->draw_petent(k2->index);
-        master->line2--;
-        master->draw_line(master->line2);
-    }
-    else if(!k3->take)
-    {
-        unique_lock<mutex> locker(k1->m, defer_lock);
-        locker.lock();
-        state = 2;
-        k3->take = true;
-        chosen = k3;
-        locker.unlock();
-        master->draw_petent(k3->index);
-        master->line2--;
-        master->draw_line(master->line2);
-    }
-}
-
-void Client::give_order()
-{
-    //if(order != NULL) delete order;
-    int size = (rand() % 3) + 1;
-    order = new int[size + 2];
-    order[0] = size + 2;
-    order[1] = index;
-    for(int i=0; i<size; i++)
-    {
-        order[i + 2] = (rand() % 5);
-    }
-    unique_lock<mutex> locker(k1->m, defer_lock);
-    locker.lock();
-    chosen->order = order;
-    chosen->isready = true;
-    chosen->payed = false;
-    master->clear_petent(chosen->index);
-    state = 3;
-    locker.unlock();
-    master->line3++;
-    master->draw_line3(master->line3);
-}
-
-void Client::wait2()
-{
-
-}

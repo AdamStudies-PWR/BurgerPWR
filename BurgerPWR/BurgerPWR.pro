@@ -4,6 +4,8 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+    Client.cpp \
+    Worker.cpp \
         gamemaster.cpp \
         interface.cpp \
         main.cpp \

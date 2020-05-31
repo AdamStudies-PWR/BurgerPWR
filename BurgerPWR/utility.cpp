@@ -9,6 +9,7 @@ Utility::Utility()
   init_pair(SIT, COLOR_BLACK, COLOR_YELLOW);
   init_pair(WINDOW, COLOR_RED, COLOR_WHITE);
   init_pair(THREADS, COLOR_BLACK, COLOR_WHITE);
+  init_pair(TEXT, COLOR_WHITE, COLOR_BLACK);
 }
 
 void Utility::refresh_bar()
@@ -179,6 +180,166 @@ void Utility::print_title()
   attroff(COLOR_PAIR(TITLE));
 }
 
+void Utility::draw_cook(int index)
+{
+    int row = 0;
+    int col = 0;
+    switch(index)
+    {
+        case 1:
+        {
+             row = (2*(rows/3) + (rows/3)/3);
+             col = 0.12 * columns;
+        } break;
+        case 2:
+        {
+             row = (2*(rows/3) + ((rows/3)/3));
+             col = 0.26 * columns;
+        } break;
+        case 3:
+        {
+             row = (2*(rows/3) + 2 * (rows/3)/3);
+             col = 0.12 * columns;
+        } break;
+        case 4:
+        {
+             row = (2*(rows/3) + 2 * (rows/3)/3);
+             col = 0.26 * columns;
+        } break;
+        case 5:
+        {
+             row = (2*(rows/3) + (rows/3)/3);
+             col = 0.31 * columns;
+        } break;
+        case 6:
+        {
+             row = (2*(rows/3) + (rows/3)/3);
+             col = 0.46 * columns;
+        } break;
+        case 7:
+        {
+             row = (2*(rows/3) + 2 * (rows/3)/3);
+             col = 0.31 * columns;
+        } break;
+        case 8:
+        {
+             row = (2*(rows/3) + 2 * (rows/3)/3);
+             col = 0.46 * columns;
+        }
+    }
+    attron(COLOR_PAIR(THREADS));
+    mvprintw(row, col, objects[0].c_str());
+    attroff(COLOR_PAIR(THREADS));
+    attron(COLOR_PAIR(TEXT));
+    mvprintw(row + 1, col + 1, "0%%");
+    attroff(COLOR_PAIR(TEXT));
+}
+
+void Utility::clear_cook(int index)
+{
+    int row = 0;
+    int col = 0;
+    switch(index)
+    {
+        case 1:
+        {
+             row = (2*(rows/3) + (rows/3)/3);
+             col = 0.12 * columns;
+        } break;
+        case 2:
+        {
+             row = (2*(rows/3) + ((rows/3)/3));
+             col = 0.26 * columns;
+        } break;
+        case 3:
+        {
+             row = (2*(rows/3) + 2 * (rows/3)/3);
+             col = 0.12 * columns;
+        } break;
+        case 4:
+        {
+             row = (2*(rows/3) + 2 * (rows/3)/3);
+             col = 0.26 * columns;
+        } break;
+        case 5:
+        {
+             row = (2*(rows/3) + (rows/3)/3);
+             col = 0.31 * columns;
+        } break;
+        case 6:
+        {
+             row = (2*(rows/3) + (rows/3)/3);
+             col = 0.46 * columns;
+        } break;
+        case 7:
+        {
+             row = (2*(rows/3) + 2 * (rows/3)/3);
+             col = 0.31 * columns;
+        } break;
+        case 8:
+        {
+             row = (2*(rows/3) + 2 * (rows/3)/3);
+             col = 0.46 * columns;
+        }
+    }
+    attron(COLOR_PAIR(TEXT));
+    mvprintw(row, col, "    ");
+    mvprintw(row + 1, col, "    ");
+    attroff(COLOR_PAIR(TEXT));
+}
+
+void Utility::update_cook(int index, float progress)
+{
+    int row = 0;
+    int col = 0;
+    switch(index)
+    {
+        case 1:
+        {
+             row = (2*(rows/3) + (rows/3)/3);
+             col = 0.12 * columns;
+        } break;
+        case 2:
+        {
+             row = (2*(rows/3) + ((rows/3)/3));
+             col = 0.26 * columns;
+        } break;
+        case 3:
+        {
+             row = (2*(rows/3) + 2 * (rows/3)/3);
+             col = 0.12 * columns;
+        } break;
+        case 4:
+        {
+             row = (2*(rows/3) + 2 * (rows/3)/3);
+             col = 0.26 * columns;
+        } break;
+        case 5:
+        {
+             row = (2*(rows/3) + (rows/3)/3);
+             col = 0.31 * columns;
+        } break;
+        case 6:
+        {
+             row = (2*(rows/3) + (rows/3)/3);
+             col = 0.46 * columns;
+        } break;
+        case 7:
+        {
+             row = (2*(rows/3) + 2 * (rows/3)/3);
+             col = 0.31 * columns;
+        } break;
+        case 8:
+        {
+             row = (2*(rows/3) + 2 * (rows/3)/3);
+             col = 0.46 * columns;
+        }
+    }
+    attron(COLOR_PAIR(TEXT));
+    mvprintw(row + 1, col, "%.1f%%", (progress * 100));
+    attroff(COLOR_PAIR(TEXT));
+}
+
 void Utility::draw_cash(int index)
 {
    //m.lock();
@@ -226,7 +387,6 @@ void Utility::draw_petent(int index)
    attroff(COLOR_PAIR(THREADS));
    //m.unlock();
 }
-
 
 void Utility::draw_line(int length)
 {

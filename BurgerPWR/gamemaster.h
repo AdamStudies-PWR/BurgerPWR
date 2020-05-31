@@ -22,6 +22,27 @@ struct kasa
     }
 };
 
+struct kitchen
+{
+    bool busy = false;
+    int index;
+    mutex m;
+
+    kitchen(int index)
+    {
+        this->index = index;
+    }
+
+    kitchen() {}
+};
+
+struct takeaway
+{
+    bool busy = false;
+    int mealfor = -1;
+    mutex m;
+};
+
 class GameMaster: public Utility
 {
 private:
@@ -54,6 +75,15 @@ private:
   kasa *k1;
   kasa *k2;
   kasa *k3;
+  kitchen *c1;
+  kitchen *c2;
+  kitchen *c3;
+  kitchen *c4;
+  kitchen *c5;
+  kitchen *c6;
+  kitchen *c7;
+  kitchen *c8;
+  takeaway *tk;
 
   //metody
   void main_loop();
@@ -73,31 +103,6 @@ public:
   GameMaster(bool mode, int prices[5], int cost[5], int pay, int workers);
   GameMaster();
   ~GameMaster();
-};
-
-class Worker
-{
-private:
-    GameMaster *master;
-    kasa *k1;
-    kasa *k2;
-    kasa *k3;
-
-    kasa *chosen;
-
-    int *order;
-    int index;
-    int state = 0;
-    int time;
-public:
-    Worker(int index, GameMaster *master, kasa *k1, kasa *k2, kasa *k3);
-    ~Worker();
-
-    void main_loop();
-private:
-    void begin();
-    void wait();
-    void take_order();
 };
 
 class Client
@@ -123,6 +128,46 @@ private:
     void wait();
     void give_order();
     void wait2();
+};
+
+class Worker
+{
+private:
+    GameMaster *master;
+    kasa *k1;
+    kasa *k2;
+    kasa *k3;
+    kitchen *c1;
+    kitchen *c2;
+    kitchen *c3;
+    kitchen *c4;
+    kitchen *c5;
+    kitchen *c6;
+    kitchen *c7;
+    kitchen *c8;
+
+    takeaway *tk;
+    kasa *chosen;
+    kitchen *cooker;
+
+    int *order;
+    int index;
+    int state = 0;
+    int time;
+    int order_for = -1;
+    int counter = 0;
+public:
+    Worker(int index, GameMaster *master, kasa *k1, kasa *k2, kasa *k3, kitchen *c1, kitchen *c2, kitchen *c3, kitchen *c4, kitchen *c5, kitchen *c6, kitchen *c7, kitchen *c8, takeaway tk);
+    ~Worker();
+
+    void main_loop();
+private:
+    void begin();
+    void wait();
+    void take_order();
+    void choose_cooker();
+    void give_food();
+    void cook();
 };
 
 #endif // GAMEMASTER_H
