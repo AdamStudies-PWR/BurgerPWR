@@ -70,7 +70,6 @@ private:
 
   string selection = "🍔";
   string choice[7] = {selection, "  ", "  ", "  ", "  ", "  ", "  "};
-  string emoji[7] = {"🍔", "🍟", "🥤", "🍕", "🥙", "🧢", "💵"};
 
   kasa *k1;
   kasa *k2;
@@ -85,6 +84,8 @@ private:
   kitchen *c8;
   takeaway *tk;
 
+  bool seats[8] = {false, false, false, false, false, false, false, false};
+
   //metody
   void main_loop();
   void check_keyboard();
@@ -94,12 +95,14 @@ private:
   void resources_info();
   void start_client();
 public:
-  mutex m;
   int line = 0;
   int line2 = 0;
   int line3 = 0;
+  int line4 = 0;
+  int line5 = 0;
   bool getEnd();
   void setEnd(bool end);
+  void decreaseClients();
   GameMaster(bool mode, int prices[5], int cost[5], int pay, int workers);
   GameMaster();
   ~GameMaster();
@@ -113,13 +116,19 @@ private:
     kasa *k2;
     kasa *k3;
 
+    takeaway *tk;
     kasa *chosen;
+    bool *seats;
 
     int index;
     int state = 0;
     int *order;
+    int time;
+    int counter = 0;
+    int seat_id;
+    int osize;
 public:
-    Client(int index, GameMaster *master, kasa *k1, kasa *k2, kasa *k3);
+    Client(int index, GameMaster *master, kasa *k1, kasa *k2, kasa *k3, takeaway *tk, bool *seats);
     ~Client();
 
     void main_loop();
@@ -128,6 +137,9 @@ private:
     void wait();
     void give_order();
     void wait2();
+    void take_food();
+    void eat();
+    void wait3();
 };
 
 class Worker
@@ -157,7 +169,7 @@ private:
     int order_for = -1;
     int counter = 0;
 public:
-    Worker(int index, GameMaster *master, kasa *k1, kasa *k2, kasa *k3, kitchen *c1, kitchen *c2, kitchen *c3, kitchen *c4, kitchen *c5, kitchen *c6, kitchen *c7, kitchen *c8, takeaway tk);
+    Worker(int index, GameMaster *master, kasa *k1, kasa *k2, kasa *k3, kitchen *c1, kitchen *c2, kitchen *c3, kitchen *c4, kitchen *c5, kitchen *c6, kitchen *c7, kitchen *c8, takeaway *tk);
     ~Worker();
 
     void main_loop();
@@ -168,6 +180,8 @@ private:
     void choose_cooker();
     void give_food();
     void cook();
+    void wait2();
+    void end();
 };
 
 #endif // GAMEMASTER_H

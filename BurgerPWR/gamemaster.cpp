@@ -4,6 +4,8 @@ GameMaster::GameMaster() {}
 
 GameMaster::GameMaster(bool mode, int prices[], int cost[], int pay, int max_workers)
 {
+  drawing = true;
+  m.lock();
   k1 = new kasa(1);
   k2 = new kasa(2);
   k3 = new kasa(3);
@@ -37,6 +39,8 @@ GameMaster::GameMaster(bool mode, int prices[], int cost[], int pay, int max_wor
   for(int i=0; i<max_workers; i++) workers[i].detach();
   thread keyboard(&GameMaster::check_keyboard, this);
   keyboard.detach();
+  drawing = false;
+  m.unlock();
   main_loop();
 }
 
@@ -99,6 +103,7 @@ void GameMaster::calculate_cost()
 void GameMaster::main_loop()
 {
   int randw;
+
   while(!end)
   {
     this_thread::sleep_for(chrono::milliseconds(1000));
@@ -121,7 +126,7 @@ void GameMaster::main_loop()
 void GameMaster::start_client()
 {
     clients++;
-    Client *c = new Client(history, this, k1, k2, k3);
+    Client *c = new Client(history, this, k1, k2, k3, tk, seats);
     history++;
     thread cli(&Client::main_loop, c);
     cli.detach();
@@ -200,3 +205,4 @@ void GameMaster::check_keyboard()
 //Utility func
 bool GameMaster::getEnd() {return end;}
 void GameMaster::setEnd(bool end) {this->end = end;}
+void GameMaster::decreaseClients() {this->clients--;}

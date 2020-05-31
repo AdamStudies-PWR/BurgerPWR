@@ -284,7 +284,7 @@ void Utility::clear_cook(int index)
     }
     attron(COLOR_PAIR(TEXT));
     mvprintw(row, col, "    ");
-    mvprintw(row + 1, col, "    ");
+    mvprintw(row + 1, col, "       ");
     attroff(COLOR_PAIR(TEXT));
 }
 
@@ -459,4 +459,245 @@ void Utility::draw_line3(int length)
     }
     attroff(COLOR_PAIR(TITLE));
     //m.unlock();
+}
+
+void Utility::draw_line4(int length)
+{
+    attron(COLOR_PAIR(THREADS));
+    int i = 0;
+    for(; i<length; i++)
+    {
+        mvprintw((2*(rows/3) + 5 + i), 0.53*columns, objects[0].c_str());
+    }
+    attroff(COLOR_PAIR(THREADS));
+    attron(COLOR_PAIR(TITLE));
+    for(; i<6; i++)
+    {
+        mvprintw((2*(rows/3) + 5  + i), 0.53*columns, "    ");
+    }
+    attroff(COLOR_PAIR(TITLE));
+}
+
+void Utility::draw_take()
+{
+    attron(COLOR_PAIR(THREADS));
+    mvprintw((2*(rows/3) + 1), 0.53*columns, objects[0].c_str());
+    attroff(COLOR_PAIR(THREADS));
+}
+
+void Utility::clear_take()
+{
+    attron(COLOR_PAIR(TEXT));
+    mvprintw((2*(rows/3) + 1), 0.53*columns, "      ");
+    attroff(COLOR_PAIR(TEXT));
+}
+
+void Utility::draw_ctake()
+{
+    attron(COLOR_PAIR(THREADS));
+    mvprintw((2*(rows/3) - 1), 0.53*columns, objects[1].c_str());
+    attroff(COLOR_PAIR(THREADS));
+}
+
+void Utility::clear_ctake()
+{
+    attron(COLOR_PAIR(TEXT));
+    mvprintw((2*(rows/3) - 1), 0.53*columns, "     ");
+    attroff(COLOR_PAIR(TEXT));
+}
+
+void Utility::draw_line5(int length)
+{
+    attron(COLOR_PAIR(THREADS));
+    int i = 0;
+    for(; i<length; i++)
+    {
+        mvprintw((2*(rows/3) - 4 - i), 0.4*columns, objects[1].c_str());
+    }
+    attroff(COLOR_PAIR(THREADS));
+    attron(COLOR_PAIR(TITLE));
+    for(; i<16; i++)
+    {
+        mvprintw((2*(rows/3) -4 - i), 0.4*columns, "    ");
+    }
+    attroff(COLOR_PAIR(TITLE));
+}
+
+void Utility::draw_seat(int index, int *food, int size)
+{
+    int row = 0;
+    int col = 0;
+    int table = 0;
+    switch(index)
+    {
+        case 0:
+        {
+            row = 0.4*(rows/3);
+            col = 0.16*columns;
+            table = 0.1*columns;
+        } break;
+        case 1:
+        {
+            row = 0.8*(rows/3);
+            col = 0.16*columns;
+            table = 0.1*columns;
+        } break;
+        case 2:
+        {
+            row = 1.2*(rows/3);
+            col = 0.16*columns;
+            table = 0.1*columns;
+        } break;
+        case 3:
+        {
+            row = 1.6*(rows/3);
+            col = 0.16*columns;
+            table = 0.1*columns;
+        } break;
+        case 4:
+        {
+            row = 0.4*(rows/3);
+            col = 0.41*columns;
+            table = 0.45*columns;
+        } break;
+        case 5:
+        {
+            row = 0.8*(rows/3);
+            col = 0.41*columns;
+            table = 0.45*columns;
+        } break;
+        case 6:
+        {
+            row = 1.2*(rows/3);
+            col = 0.41*columns;
+            table = 0.45*columns;
+        } break;
+        case 7:
+        {
+            row = rows/3;
+            col = 0.326*columns;
+            table = 0.275*columns;
+        } break;
+    }
+
+    attron(COLOR_PAIR(THREADS));
+    mvprintw(row, col, objects[1].c_str());
+    attroff(COLOR_PAIR(THREADS));
+    attron(COLOR_PAIR(TEXT));
+    mvprintw(row + 1, col + 1, "0%%");
+    int j = 0;
+    table++;
+    for(int i=0; i<size; i++)
+    {
+        mvprintw(row - 1, table + i + j, "%s", emoji[food[i]]);
+        j++;
+    }
+    attroff(COLOR_PAIR(TEXT));
+}
+
+void Utility::update_seat(int index, float progress)
+{
+    int row = 0;
+    int col = 0;
+    switch(index)
+    {
+        case 0:
+        {
+            row = 0.4*(rows/3);
+            col = 0.16*columns;
+        } break;
+        case 1:
+        {
+            row = 0.8*(rows/3);
+            col = 0.16*columns;
+        } break;
+        case 2:
+        {
+            row = 1.2*(rows/3);
+            col = 0.16*columns;
+        } break;
+        case 3:
+        {
+            row = 1.6*(rows/3);
+            col = 0.16*columns;
+        } break;
+        case 4:
+        {
+            row = 0.4*(rows/3);
+            col = 0.41*columns;
+        } break;
+        case 5:
+        {
+            row = 0.8*(rows/3);
+            col = 0.41*columns;
+        } break;
+        case 6:
+        {
+            row = 1.2*(rows/3);
+            col = 0.41*columns;
+        } break;
+        case 7:
+        {
+            row = rows/3;
+            col = 0.326*columns;
+        } break;
+    }
+
+    attron(COLOR_PAIR(TEXT));
+    mvprintw(row + 1, col, "%.1f%%", (progress * 100));
+    attroff(COLOR_PAIR(TEXT));
+}
+
+void Utility::clear_seat(int index)
+{
+    int row = 0;
+    int col = 0;
+    switch(index)
+    {
+        case 0:
+        {
+            row = 0.4*(rows/3);
+            col = 0.16*columns;
+        } break;
+        case 1:
+        {
+            row = 0.8*(rows/3);
+            col = 0.16*columns;
+        } break;
+        case 2:
+        {
+            row = 1.2*(rows/3);
+            col = 0.16*columns;
+        } break;
+        case 3:
+        {
+            row = 1.6*(rows/3);
+            col = 0.16*columns;
+        } break;
+        case 4:
+        {
+            row = 0.4*(rows/3);
+            col = 0.41*columns;
+        } break;
+        case 5:
+        {
+            row = 0.8*(rows/3);
+            col = 0.41*columns;
+        } break;
+        case 6:
+        {
+            row = 1.2*(rows/3);
+            col = 0.41*columns;
+        } break;
+        case 7:
+        {
+            row = rows/3;
+            col = 0.326*columns;
+        } break;
+    }
+
+    attron(COLOR_PAIR(TEXT));
+    mvprintw(row, col, "     ");
+    mvprintw(row + 1, col, "      ");
+    attroff(COLOR_PAIR(TEXT));
 }

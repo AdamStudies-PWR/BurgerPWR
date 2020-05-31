@@ -5,7 +5,7 @@ Worker::~Worker()
     delete master;
 }
 
-Worker::Worker(int index, GameMaster *master, kasa *k1, kasa *k2, kasa *k3, kitchen *c1, kitchen *c2, kitchen *c3, kitchen *c4, kitchen *c5, kitchen *c6, kitchen *c7, kitchen *c8, takeaway tk)
+Worker::Worker(int index, GameMaster *master, kasa *k1, kasa *k2, kasa *k3, kitchen *c1, kitchen *c2, kitchen *c3, kitchen *c4, kitchen *c5, kitchen *c6, kitchen *c7, kitchen *c8, takeaway *tk)
 {
     this->k1 = k1;
     this->k2 = k2;
@@ -34,6 +34,8 @@ void Worker::main_loop()
             case 2: take_order(); break;
             case 3: cook(); break;
             case 4: give_food(); break;
+            case 5: end(); break;
+            case 6: wait2();
         }
         this_thread::sleep_for(chrono::seconds(2));
     }
@@ -47,7 +49,7 @@ void Worker::take_order()
         locker.lock();
         order = chosen->order;
         master->clear_cash(chosen->index);
-        time = 10*order[0];
+        time = 3*order[0];
         order_for = order[1];
         chosen->busy = false;
         state = 3;
@@ -249,5 +251,42 @@ void Worker::give_food()
         tk->busy = true;
         tk->mealfor = order_for;
         locker.unlock();
+        master->draw_take();
+        state = 5;
+    }
+    else
+    {
+        state = 6;
+        master->line4++;
+        master->draw_line4(master->line4);
+    }
+}
+
+void Worker::wait2()
+{
+    if(!tk->busy)
+    {
+        unique_lock<mutex> locker(tk->m, defer_lock);
+        locker.lock();
+        tk->busy = true;
+        tk->mealfor = order_for;
+        locker.unlock();
+        master->draw_take();
+        state = 5;
+        master->line4--;
+        master->draw_line4(master->line4);
+    }
+}
+
+void Worker::end()
+{
+    if(tk->mealfor == -1)
+    {
+        unique_lock<mutex> locker(tk->m, defer_lock);
+        locker.lock();
+        master->clear_take();
+        tk->busy = false;
+        locker.unlock();
+        state = 0;
     }
 }

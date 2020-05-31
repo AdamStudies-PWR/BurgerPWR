@@ -20,7 +20,6 @@ class Utility
 {
 public:
   Utility();
-  string objects[2] = {" 🧢 ", " 🤡 "};
   void draw_cash(int index);
   void clear_cash(int index);
   void draw_petent(int index);
@@ -29,11 +28,24 @@ public:
   void update_cook(int index, float progress);
   void clear_cook(int index);
   void draw_take();
+  void clear_take();
+  void draw_ctake();
+  void clear_ctake();
+  void draw_seat(int index, int *food, int size);
+  void update_seat(int index, float progress);
+  void clear_seat(int index);
   void draw_line(int length);
   void draw_line2(int length);
   void draw_line3(int length);
+  void draw_line4(int length);
+  void draw_line5(int length);
+
+  bool drawing = false;
   mutex m;
 protected:
+  string emoji[7] = {"🍔", "🍟", "🥤", "🍕", "🥙", "🧢", "💵"};
+  string objects[2] = {" 🧢 ", " 🤡 "};
+
   int rows = 0;
   int columns = 0;
   void check_size();
