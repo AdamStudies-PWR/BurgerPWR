@@ -327,11 +327,11 @@ void Worker::give_food()
     else
     {
         state = 6;
-        master->line4++;
         while(master->drawing) sleep();
         unique_lock<mutex> dlock(master->m, defer_lock);
         dlock.lock();
         master->drawing = true;
+        master->line4++;
         master->draw_line4(master->line4);
         master->drawing = false;
         dlock.unlock();

@@ -209,7 +209,7 @@ void Utility::draw_cook(int index)
         case 5:
         {
              row = (2*(rows/3) + (rows/3)/3);
-             col = 0.33 * columns;
+             col = 0.32 * columns;
         } break;
         case 6:
         {
@@ -219,7 +219,7 @@ void Utility::draw_cook(int index)
         case 7:
         {
              row = (2*(rows/3) + 2 * (rows/3)/3);
-             col = 0.33 * columns;
+             col = 0.32 * columns;
         } break;
         case 8:
         {
@@ -264,7 +264,7 @@ void Utility::clear_cook(int index)
         case 5:
         {
              row = (2*(rows/3) + (rows/3)/3);
-             col = 0.33 * columns;
+             col = 0.32 * columns;
         } break;
         case 6:
         {
@@ -274,7 +274,7 @@ void Utility::clear_cook(int index)
         case 7:
         {
              row = (2*(rows/3) + 2 * (rows/3)/3);
-             col = 0.33 * columns;
+             col = 0.32 * columns;
         } break;
         case 8:
         {
@@ -317,7 +317,7 @@ void Utility::update_cook(int index, float progress)
         case 5:
         {
              row = (2*(rows/3) + (rows/3)/3);
-             col = 0.33 * columns;
+             col = 0.32 * columns;
         } break;
         case 6:
         {
@@ -327,7 +327,7 @@ void Utility::update_cook(int index, float progress)
         case 7:
         {
              row = (2*(rows/3) + 2 * (rows/3)/3);
-             col = 0.33 * columns;
+             col = 0.32 * columns;
         } break;
         case 8:
         {
@@ -557,25 +557,25 @@ void Utility::draw_seat(int index, int *food, int size)
         case 4:
         {
             row = 0.4*(rows/3);
-            col = 0.41*columns;
+            col = 0.42*columns;
             table = 0.45*columns + 1;
         } break;
         case 5:
         {
             row = 0.8*(rows/3);
-            col = 0.41*columns;
+            col = 0.42*columns;
             table = 0.45*columns + 1;
         } break;
         case 6:
         {
             row = 1.2*(rows/3);
-            col = 0.41*columns;
+            col = 0.42*columns;
             table = 0.45*columns + 1;
         } break;
         case 7:
         {
             row = rows/3;
-            col = 0.326*columns;
+            col = 0.34*columns;
             table = 0.275*columns;
         } break;
     }
@@ -623,22 +623,22 @@ void Utility::update_seat(int index, float progress)
         case 4:
         {
             row = 0.4*(rows/3);
-            col = 0.41*columns;
+            col = 0.42*columns;
         } break;
         case 5:
         {
             row = 0.8*(rows/3);
-            col = 0.41*columns;
+            col = 0.42*columns;
         } break;
         case 6:
         {
             row = 1.2*(rows/3);
-            col = 0.41*columns;
+            col = 0.42*columns;
         } break;
         case 7:
         {
             row = rows/3;
-            col = 0.326*columns;
+            col = 0.34*columns;
         } break;
     }
 
@@ -681,25 +681,25 @@ void Utility::clear_seat(int index)
         case 4:
         {
             row = 0.4*(rows/3);
-            col = 0.41*columns;
+            col = 0.42*columns;
             table = 0.45*columns + 1;
         } break;
         case 5:
         {
             row = 0.8*(rows/3);
-            col = 0.41*columns;
+            col = 0.42*columns;
             table = 0.45*columns + 1;
         } break;
         case 6:
         {
             row = 1.2*(rows/3);
-            col = 0.41*columns;
+            col = 0.42*columns;
             table = 0.45*columns + 1;
         } break;
         case 7:
         {
             row = rows/3;
-            col = 0.326*columns;
+            col = 0.34*columns;
             table = 0.275*columns;
         } break;
     }

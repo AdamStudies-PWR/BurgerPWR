@@ -62,7 +62,7 @@ bool Interface::set_up()
     mvprintw(rows/2, columns/2 - 7, "[%s] Rozpocznij", choice[0].c_str());
     mvprintw(rows/2 + 1, columns/2 - 7, "[%s] Tryb: %s", choice[1].c_str(), mode.c_str());
     mvprintw(rows/2 + 2, columns/2 - 7, "[%s] Ilość pracowników: %d", choice[2].c_str(), workers);
-    mvprintw(rows/2 + 3, columns/2 - 7, "[%s] Pensja: %d zł na godzinę", choice[3].c_str(), pay);
+    mvprintw(rows/2 + 3, columns/2 - 7, "[%s] Pensja: %d$ na godzinę", choice[3].c_str(), pay);
     mvprintw(rows/2 + 4, columns/2 - 7, "[%s] Ceny", choice[4].c_str());
     mvprintw(rows/2 + 5, columns/2 - 7, "[%s] Cofnij", choice[5].c_str());
     input = getch();
@@ -139,11 +139,11 @@ void Interface::set_prices()
     clear();
     print_title();
     printw("\n\n\n\n\n");
-    mvprintw(rows/2, columns/2 - 7, "[%s] Burger: %d", choice[0].c_str(), prices[0]);
-    mvprintw(rows/2 + 1, columns/2 - 7, "[%s] Frytki: %d", choice[1].c_str(), prices[1]);
-    mvprintw(rows/2 + 2, columns/2 - 7, "[%s] Cola: %d", choice[2].c_str(), prices[2]);
-    mvprintw(rows/2 + 3, columns/2 - 7, "[%s] Pizza %d:", choice[3].c_str(), prices[3]);
-    mvprintw(rows/2 + 4, columns/2 - 7, "[%s] Kebab: %d", choice[4].c_str(), prices[4]);
+    mvprintw(rows/2, columns/2 - 7, "[%s] Burger: %d$", choice[0].c_str(), prices[0]);
+    mvprintw(rows/2 + 1, columns/2 - 7, "[%s] Frytki: %d$", choice[1].c_str(), prices[1]);
+    mvprintw(rows/2 + 2, columns/2 - 7, "[%s] Cola: %d$", choice[2].c_str(), prices[2]);
+    mvprintw(rows/2 + 3, columns/2 - 7, "[%s] Pizza: %d$", choice[3].c_str(), prices[3]);
+    mvprintw(rows/2 + 4, columns/2 - 7, "[%s] Kebab: %d$", choice[4].c_str(), prices[4]);
     mvprintw(rows/2 + 5, columns/2 - 7, "[%s] Zatwierdź", choice[5].c_str());
     input = getch();
     check_size();

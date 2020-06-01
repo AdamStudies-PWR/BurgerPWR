@@ -175,7 +175,6 @@ void Client::give_order()
     chosen->order = order;
     chosen->isready = true;
     chosen->payed = false;
-    state = 3;
     locker.unlock();
     while(master->drawing) sleep();
     unique_lock<mutex> dlock(master->m, defer_lock);
@@ -186,16 +185,17 @@ void Client::give_order()
     master->draw_line3(master->line3);
     master->drawing = false;
     dlock.unlock();
+    state = 3;
 }
 
 void Client::wait2()
 {
     if(tk->mealfor == index)
     {
-        master->line3--;
         while(master->drawing) sleep();
         unique_lock<mutex> dlock(master->m, defer_lock);
         dlock.lock();
+        master->line3--;
         master->drawing = true;
         master->draw_line3(master->line3);
         master->draw_ctake();
@@ -212,14 +212,14 @@ void Client::take_food()
     {
         if(!seats[i])
         {
-            for(int j=0; j<osize; j++)
-            {
-                temp[j] = order[j + 2];
-            }
-            seats[i] = true;
             while(master->drawing) sleep();
             unique_lock<mutex> dlock(master->m, defer_lock);
             dlock.lock();
+            seats[i] = true;
+            for(int j=0; j<osize; j++)
+            {
+                temp[j] = order[j + 2];
+            }                   
             master->drawing = true;
             master->draw_seat(i, temp, osize);
             master->clear_ctake();
@@ -234,14 +234,16 @@ void Client::take_food()
         }
     }
     delete[] temp;
-    master->line5++;
     while(master->drawing) sleep();
     unique_lock<mutex> dlock(master->m, defer_lock);
     dlock.lock();
     master->drawing = true;
     master->draw_line5(master->line5);
+    master->line5++;
     master->drawing = false;
+    master->clear_ctake();
     dlock.unlock();
+    tk->mealfor = -1;
     state = 6;
 }
 
@@ -252,23 +254,23 @@ void Client::wait3()
     {
         if(!seats[i])
         {
+            while(master->drawing) sleep();
+            unique_lock<mutex> dlock(master->m, defer_lock);
+            dlock.lock();
+            seats[i] = true;
             for(int j=0; j<osize; j++)
             {
                 temp[j] = order[j + 2];
             }
-            seats[i] = true;
-            state = 5;
-            master->line5--;
-            while(master->drawing) sleep();
-            unique_lock<mutex> dlock(master->m, defer_lock);
-            dlock.lock();
+            state = 5;                      
             master->drawing = true;
+            master->line5--;
             master->draw_line5(master->line5);
             master->draw_seat(i, temp, osize);
             master->drawing = false;
             dlock.unlock();
             counter = 0;
-            seat_id = 3;
+            seat_id = i;
             delete[] temp;
             return;
         }
