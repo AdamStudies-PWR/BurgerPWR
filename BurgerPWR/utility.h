@@ -52,6 +52,7 @@ protected:
   void print_title();
   void draw_game();
   void refresh_bar();
+  void endGame();
 };
 
 #endif // GRAPHICFUNC_H

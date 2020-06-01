@@ -51,7 +51,6 @@ private:
   const int max_clients = 16;
   int clients = 0;
   int history = 0;
-  int prices[5];
   int cost[5];
   int pay;
   int max_workers;
@@ -61,7 +60,6 @@ private:
   bool end = false;
   int labor = 0;
   int loss = 0;
-  int income = 0;
   int budget = 10000;
   int hour[2] = {0, 8};
   int minutes[2] = {0, 0};
@@ -94,12 +92,16 @@ private:
   void side_UI();
   void resources_info();
   void start_client();
+  void sleep();
 public:
   int line = 0;
   int line2 = 0;
   int line3 = 0;
   int line4 = 0;
   int line5 = 0;
+  int income = 0;
+  int prices[5];
+
   bool getEnd();
   void setEnd(bool end);
   void decreaseClients();
@@ -140,6 +142,7 @@ private:
     void take_food();
     void eat();
     void wait3();
+    void sleep();
 };
 
 class Worker
@@ -182,6 +185,7 @@ private:
     void cook();
     void wait2();
     void end();
+    void sleep();
 };
 
 #endif // GAMEMASTER_H

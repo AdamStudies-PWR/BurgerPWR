@@ -5,6 +5,7 @@ GameMaster::GameMaster() {}
 GameMaster::GameMaster(bool mode, int prices[], int cost[], int pay, int max_workers)
 {
   drawing = true;
+  this->mode = mode;
   m.lock();
   k1 = new kasa(1);
   k2 = new kasa(2);
@@ -107,19 +108,34 @@ void GameMaster::main_loop()
   while(!end)
   {
     this_thread::sleep_for(chrono::milliseconds(1000));
+    while(drawing) sleep();
+    drawing = true;
+    m.lock();
     refresh_bar();
     attron(COLOR_PAIR(INFO_BAR));
     mvprintw(0, 0, "Dzień: %d%d%d%d   Czas: %d%d:%d%d", day[0], day[1], day[2], day[3], hour[0], hour[1], minutes[0], minutes[1]);
     mvprintw(rows - 1, 0, "Przychód: %d$ \t\t Straty: %d$", income, loss);
     mvprintw(rows - 1, columns - 20, "Budżet: %d$", budget);
     calculate_cost();
-    timer();
+    attroff(COLOR_PAIR(INFO_BAR));
+    m.unlock();
+    drawing = false;
     if(clients < max_clients)
     {
         randw = rand() % 5;
         if(randw == 1) start_client();
     }
-    attroff(COLOR_PAIR(INFO_BAR));
+    timer();
+    if(mode)
+    {
+        if(budget<0) end=true;
+    }
+  }
+
+  if(mode)
+  {
+      this_thread::sleep_for(chrono::milliseconds(1000));
+      endGame();
   }
 }
 
@@ -152,6 +168,7 @@ void GameMaster::check_keyboard()
   while(!this->getEnd())
   {
     int input = getch();
+    bool pressed = false;
     switch(input)
     {
       case 274: this->setEnd(true); break;
@@ -161,7 +178,7 @@ void GameMaster::check_keyboard()
         if(current == 0) current = 6;
         else current--;
         choice[current] = selection;
-        side_UI();
+        pressed = true;
       } break;
       case KEY_DOWN:
       {
@@ -169,7 +186,7 @@ void GameMaster::check_keyboard()
           if(current == 6) current = 0;
           else current++;
           choice[current] = selection;
-          side_UI();
+          pressed = true;
       } break;
       case KEY_LEFT:
       {
@@ -182,7 +199,7 @@ void GameMaster::check_keyboard()
           case 4: if(prices[4] - 1 > 4) prices[4]--; break;
           case 6: if(pay - 1 > 7) pay--; break;
         }
-        side_UI();
+        pressed = true;
       } break;
       case KEY_RIGHT:
       {
@@ -195,11 +212,25 @@ void GameMaster::check_keyboard()
             case 4: if(prices[4] + 1 < 21) prices[4]++; break;
             case 6: if(pay + 1 < 25) pay++; break;
           }
-          side_UI();
+          pressed = true;
       } break;
+    }
+    if(pressed)
+    {
+        while(drawing) sleep();
+        m.lock();
+        drawing = true;
+        side_UI();
+        drawing = false;
+        m.unlock();
     }
     this_thread::sleep_for(chrono::milliseconds(10));
   }
+}
+
+void GameMaster::sleep()
+{
+    this_thread::sleep_for(chrono::milliseconds(10));
 }
 
 //Utility func

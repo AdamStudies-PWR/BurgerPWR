@@ -45,7 +45,13 @@ void Client::begin()
         k1->take = true;
         chosen = k1;
         locker.unlock();
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->draw_petent(k1->index);
+        master->drawing = false;
+        dlock.unlock();
     }
     else if(!k2->take)
     {
@@ -55,7 +61,13 @@ void Client::begin()
         k2->take = true;
         chosen = k2;
         locker.unlock();
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->draw_petent(k2->index);
+        master->drawing = false;
+        dlock.unlock();
     }
     else if(!k3->take)
     {
@@ -65,13 +77,25 @@ void Client::begin()
         k3->take = true;
         chosen = k3;
         locker.unlock();
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->draw_petent(k3->index);
+        master->drawing = false;
+        dlock.unlock();
     }
     else
     {
         state = 1;
         master->line2++;
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->draw_line2(master->line2);
+        master->drawing = false;
+        dlock.unlock();
     }
 }
 
@@ -85,9 +109,15 @@ void Client::wait()
         k1->take = true;
         chosen = k1;
         locker.unlock();
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->draw_petent(k1->index);
         master->line2--;
-        master->draw_line(master->line2);
+        master->draw_line2(master->line2);
+        master->drawing = false;
+        dlock.unlock();
     }
     else if(!k2->take)
     {
@@ -97,9 +127,15 @@ void Client::wait()
         k2->take = true;
         chosen = k2;
         locker.unlock();
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->draw_petent(k2->index);
         master->line2--;
-        master->draw_line(master->line2);
+        master->draw_line2(master->line2);
+        master->drawing = false;
+        dlock.unlock();
     }
     else if(!k3->take)
     {
@@ -109,9 +145,15 @@ void Client::wait()
         k3->take = true;
         chosen = k3;
         locker.unlock();
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->draw_petent(k3->index);
         master->line2--;
-        master->draw_line(master->line2);
+        master->draw_line2(master->line2);
+        master->drawing = false;
+        dlock.unlock();
     }
 }
 
@@ -133,11 +175,17 @@ void Client::give_order()
     chosen->order = order;
     chosen->isready = true;
     chosen->payed = false;
-    master->clear_petent(chosen->index);
     state = 3;
     locker.unlock();
+    while(master->drawing) sleep();
+    unique_lock<mutex> dlock(master->m, defer_lock);
+    dlock.lock();
+    master->drawing = true;
+    master->clear_petent(chosen->index);
     master->line3++;
     master->draw_line3(master->line3);
+    master->drawing = false;
+    dlock.unlock();
 }
 
 void Client::wait2()
@@ -145,8 +193,14 @@ void Client::wait2()
     if(tk->mealfor == index)
     {
         master->line3--;
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->draw_line3(master->line3);
         master->draw_ctake();
+        master->drawing = false;
+        dlock.unlock();
         state = 4;
     }
 }
@@ -163,8 +217,14 @@ void Client::take_food()
                 temp[j] = order[j + 2];
             }
             seats[i] = true;
+            while(master->drawing) sleep();
+            unique_lock<mutex> dlock(master->m, defer_lock);
+            dlock.lock();
+            master->drawing = true;
             master->draw_seat(i, temp, osize);
             master->clear_ctake();
+            master->drawing = false;
+            dlock.unlock();
             tk->mealfor = -1;
             state = 5;
             counter = 0;
@@ -175,7 +235,13 @@ void Client::take_food()
     }
     delete[] temp;
     master->line5++;
+    while(master->drawing) sleep();
+    unique_lock<mutex> dlock(master->m, defer_lock);
+    dlock.lock();
+    master->drawing = true;
     master->draw_line5(master->line5);
+    master->drawing = false;
+    dlock.unlock();
     state = 6;
 }
 
@@ -191,10 +257,16 @@ void Client::wait3()
                 temp[j] = order[j + 2];
             }
             seats[i] = true;
-            master->draw_seat(i, temp, osize);
             state = 5;
             master->line5--;
+            while(master->drawing) sleep();
+            unique_lock<mutex> dlock(master->m, defer_lock);
+            dlock.lock();
+            master->drawing = true;
             master->draw_line5(master->line5);
+            master->draw_seat(i, temp, osize);
+            master->drawing = false;
+            dlock.unlock();
             counter = 0;
             seat_id = 3;
             delete[] temp;
@@ -212,12 +284,31 @@ void Client::eat()
         this_thread::sleep_for(chrono::seconds(1));
         counter++;
         temp = float(counter)/float(time);
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->update_seat(seat_id, temp);
+        master->drawing = false;
+        dlock.unlock();
     }
     else
     {
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->clear_seat(seat_id);
+        master->drawing = false;
+        dlock.unlock();
         state = 7;
         master->decreaseClients();
+        seats[seat_id] = false;
     }
 }
+
+void Client::sleep()
+{
+    this_thread::sleep_for(chrono::milliseconds(10));
+}
+
