@@ -48,10 +48,21 @@ void Worker::take_order()
         unique_lock<mutex> locker(k1->m, defer_lock);
         locker.lock();
         order = chosen->order;
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->clear_cash(chosen->index);
+        for(int i=0; i<(order[0]-2); i++)
+        {
+            master->income = master->income + master->prices[order[i + 2]];
+        }
+        dlock.unlock();
+        master->drawing = false;
         time = 3*order[0];
         order_for = order[1];
         chosen->busy = false;
+        chosen->isready = false;
         state = 3;
         counter = 0;
         locker.unlock();
@@ -67,7 +78,6 @@ void Worker::choose_cooker()
         locker.lock();
         c1->busy = true;
         locker.unlock();
-        master->draw_cook(c1->index);
         cooker = c1;
     }
     else if(!c2->busy)
@@ -76,7 +86,6 @@ void Worker::choose_cooker()
         locker.lock();
         c2->busy = true;
         locker.unlock();
-        master->draw_cook(c2->index);
         cooker = c2;
     }
     else if(!c3->busy)
@@ -85,7 +94,6 @@ void Worker::choose_cooker()
         locker.lock();
         c3->busy = true;
         locker.unlock();
-        master->draw_cook(c3->index);
         cooker = c3;
     }
     else if(!c4->busy)
@@ -94,7 +102,6 @@ void Worker::choose_cooker()
         locker.lock();
         c4->busy = true;
         locker.unlock();
-        master->draw_cook(c4->index);
         cooker = c4;
     }
     else if(!c5->busy)
@@ -103,7 +110,6 @@ void Worker::choose_cooker()
         locker.lock();
         c5->busy = true;
         locker.unlock();
-        master->draw_cook(c5->index);
         cooker = c5;
     }
     else if(!c6->busy)
@@ -112,7 +118,6 @@ void Worker::choose_cooker()
         locker.lock();
         c6->busy = true;
         locker.unlock();
-        master->draw_cook(c6->index);
         cooker = c6;
     }
     else if(!c7->busy)
@@ -121,7 +126,6 @@ void Worker::choose_cooker()
         locker.lock();
         c7->busy = true;
         locker.unlock();
-        master->draw_cook(c7->index);
         cooker = c7;
     }
     else
@@ -130,9 +134,15 @@ void Worker::choose_cooker()
         locker.lock();
         c8->busy = true;
         locker.unlock();
-        master->draw_cook(c8->index);
         cooker = c8;
     }
+    while(master->drawing) sleep();
+    unique_lock<mutex> dlock(master->m, defer_lock);
+    dlock.lock();
+    master->drawing = true;
+    master->draw_cook(cooker->index);
+    master->drawing = false;
+    dlock.unlock();
 }
 
 void Worker::begin()
@@ -146,7 +156,13 @@ void Worker::begin()
         k1->take = false;
         chosen = k1;
         locker.unlock();
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->draw_cash(k1->index);
+        master->drawing = false;
+        dlock.unlock();
     }
     else if(!k2->busy)
     {
@@ -157,7 +173,13 @@ void Worker::begin()
         k2->take = false;
         chosen = k2;
         locker.unlock();
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->draw_cash(k2->index);
+        master->drawing = false;
+        dlock.unlock();
     }
     else if(!k3->busy)
     {
@@ -168,13 +190,25 @@ void Worker::begin()
         k3->take = false;
         chosen = k3;
         locker.unlock();
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->draw_cash(k3->index);
+        master->drawing = false;
+        dlock.unlock();
     }
     else
     {
         state = 1;
         master->line++;
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->draw_line(master->line);
+        master->drawing = false;
+        dlock.unlock();
     }
 }
 
@@ -189,9 +223,15 @@ void Worker::wait()
         k1->take = false;
         chosen = k1;
         locker.unlock();
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->draw_cash(k1->index);
         master->line--;
         master->draw_line(master->line);
+        master->drawing = false;
+        dlock.unlock();
     }
     else if(!k2->busy)
     {
@@ -202,9 +242,15 @@ void Worker::wait()
         k2->take = false;
         chosen = k2;
         locker.unlock();
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->draw_cash(k2->index);
         master->line--;
         master->draw_line(master->line);
+        master->drawing = false;
+        dlock.unlock();
     }
     else if(!k3->busy)
     {
@@ -215,9 +261,15 @@ void Worker::wait()
         k3->take = false;
         chosen = k3;
         locker.unlock();
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->draw_cash(k3->index);
         master->line--;
         master->draw_line(master->line);
+        master->drawing = false;
+        dlock.unlock();
     }
 }
 
@@ -229,15 +281,27 @@ void Worker::cook()
         this_thread::sleep_for(chrono::seconds(1));
         counter++;
         temp = float(counter)/float(time);
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->update_cook(cooker->index, temp);
+        master->drawing = false;
+        dlock.unlock();
     }
     else
     {
         unique_lock<mutex> locker(cooker->m, defer_lock);
         locker.lock();
         cooker->busy = false;
-        master->clear_cook(cooker->index);
         locker.unlock();
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
+        master->clear_cook(cooker->index);        
+        master->drawing = false;
+        dlock.unlock();
         state = 4;
     }
 }
@@ -251,14 +315,26 @@ void Worker::give_food()
         tk->busy = true;
         tk->mealfor = order_for;
         locker.unlock();
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->draw_take();
+        master->drawing = false;
+        dlock.unlock();
         state = 5;
     }
     else
     {
         state = 6;
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->line4++;
         master->draw_line4(master->line4);
+        master->drawing = false;
+        dlock.unlock();
     }
 }
 
@@ -271,10 +347,16 @@ void Worker::wait2()
         tk->busy = true;
         tk->mealfor = order_for;
         locker.unlock();
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->draw_take();
-        state = 5;
         master->line4--;
         master->draw_line4(master->line4);
+        master->drawing = false;
+        dlock.unlock();
+        state = 5;
     }
 }
 
@@ -284,9 +366,20 @@ void Worker::end()
     {
         unique_lock<mutex> locker(tk->m, defer_lock);
         locker.lock();
+        while(master->drawing) sleep();
+        unique_lock<mutex> dlock(master->m, defer_lock);
+        dlock.lock();
+        master->drawing = true;
         master->clear_take();
+        master->drawing = false;
+        dlock.unlock();
         tk->busy = false;
         locker.unlock();
         state = 0;
     }
+}
+
+void Worker::sleep()
+{
+    this_thread::sleep_for(chrono::milliseconds(10));
 }

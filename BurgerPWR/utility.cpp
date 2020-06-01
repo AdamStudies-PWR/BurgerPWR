@@ -209,7 +209,7 @@ void Utility::draw_cook(int index)
         case 5:
         {
              row = (2*(rows/3) + (rows/3)/3);
-             col = 0.31 * columns;
+             col = 0.32 * columns;
         } break;
         case 6:
         {
@@ -219,7 +219,7 @@ void Utility::draw_cook(int index)
         case 7:
         {
              row = (2*(rows/3) + 2 * (rows/3)/3);
-             col = 0.31 * columns;
+             col = 0.32 * columns;
         } break;
         case 8:
         {
@@ -264,7 +264,7 @@ void Utility::clear_cook(int index)
         case 5:
         {
              row = (2*(rows/3) + (rows/3)/3);
-             col = 0.31 * columns;
+             col = 0.32 * columns;
         } break;
         case 6:
         {
@@ -274,7 +274,7 @@ void Utility::clear_cook(int index)
         case 7:
         {
              row = (2*(rows/3) + 2 * (rows/3)/3);
-             col = 0.31 * columns;
+             col = 0.32 * columns;
         } break;
         case 8:
         {
@@ -317,7 +317,7 @@ void Utility::update_cook(int index, float progress)
         case 5:
         {
              row = (2*(rows/3) + (rows/3)/3);
-             col = 0.31 * columns;
+             col = 0.32 * columns;
         } break;
         case 6:
         {
@@ -327,7 +327,7 @@ void Utility::update_cook(int index, float progress)
         case 7:
         {
              row = (2*(rows/3) + 2 * (rows/3)/3);
-             col = 0.31 * columns;
+             col = 0.32 * columns;
         } break;
         case 8:
         {
@@ -534,48 +534,48 @@ void Utility::draw_seat(int index, int *food, int size)
         {
             row = 0.4*(rows/3);
             col = 0.16*columns;
-            table = 0.1*columns;
+            table = 0.1*columns + 1;
         } break;
         case 1:
         {
             row = 0.8*(rows/3);
             col = 0.16*columns;
-            table = 0.1*columns;
+            table = 0.1*columns + 1;
         } break;
         case 2:
         {
             row = 1.2*(rows/3);
             col = 0.16*columns;
-            table = 0.1*columns;
+            table = 0.1*columns + 1;
         } break;
         case 3:
         {
             row = 1.6*(rows/3);
             col = 0.16*columns;
-            table = 0.1*columns;
+            table = 0.1*columns + 1;
         } break;
         case 4:
         {
             row = 0.4*(rows/3);
-            col = 0.41*columns;
-            table = 0.45*columns;
+            col = 0.42*columns;
+            table = 0.45*columns + 1;
         } break;
         case 5:
         {
             row = 0.8*(rows/3);
-            col = 0.41*columns;
-            table = 0.45*columns;
+            col = 0.42*columns;
+            table = 0.45*columns + 1;
         } break;
         case 6:
         {
             row = 1.2*(rows/3);
-            col = 0.41*columns;
-            table = 0.45*columns;
+            col = 0.42*columns;
+            table = 0.45*columns + 1;
         } break;
         case 7:
         {
             row = rows/3;
-            col = 0.326*columns;
+            col = 0.34*columns;
             table = 0.275*columns;
         } break;
     }
@@ -586,10 +586,9 @@ void Utility::draw_seat(int index, int *food, int size)
     attron(COLOR_PAIR(TEXT));
     mvprintw(row + 1, col + 1, "0%%");
     int j = 0;
-    table++;
     for(int i=0; i<size; i++)
     {
-        mvprintw(row - 1, table + i + j, "%s", emoji[food[i]]);
+        mvprintw(row - 1, table + i + j, "%s", emoji[food[i]].c_str());
         j++;
     }
     attroff(COLOR_PAIR(TEXT));
@@ -624,22 +623,22 @@ void Utility::update_seat(int index, float progress)
         case 4:
         {
             row = 0.4*(rows/3);
-            col = 0.41*columns;
+            col = 0.42*columns;
         } break;
         case 5:
         {
             row = 0.8*(rows/3);
-            col = 0.41*columns;
+            col = 0.42*columns;
         } break;
         case 6:
         {
             row = 1.2*(rows/3);
-            col = 0.41*columns;
+            col = 0.42*columns;
         } break;
         case 7:
         {
             row = rows/3;
-            col = 0.326*columns;
+            col = 0.34*columns;
         } break;
     }
 
@@ -652,52 +651,81 @@ void Utility::clear_seat(int index)
 {
     int row = 0;
     int col = 0;
+    int table = 0;
     switch(index)
     {
         case 0:
         {
             row = 0.4*(rows/3);
             col = 0.16*columns;
+            table = 0.1*columns + 1;
         } break;
         case 1:
         {
             row = 0.8*(rows/3);
             col = 0.16*columns;
+            table = 0.1*columns + 1;
         } break;
         case 2:
         {
             row = 1.2*(rows/3);
             col = 0.16*columns;
+            table = 0.1*columns + 1;
         } break;
         case 3:
         {
             row = 1.6*(rows/3);
             col = 0.16*columns;
+            table = 0.1*columns + 1;
         } break;
         case 4:
         {
             row = 0.4*(rows/3);
-            col = 0.41*columns;
+            col = 0.42*columns;
+            table = 0.45*columns + 1;
         } break;
         case 5:
         {
             row = 0.8*(rows/3);
-            col = 0.41*columns;
+            col = 0.42*columns;
+            table = 0.45*columns + 1;
         } break;
         case 6:
         {
             row = 1.2*(rows/3);
-            col = 0.41*columns;
+            col = 0.42*columns;
+            table = 0.45*columns + 1;
         } break;
         case 7:
         {
             row = rows/3;
-            col = 0.326*columns;
+            col = 0.34*columns;
+            table = 0.275*columns;
         } break;
     }
 
     attron(COLOR_PAIR(TEXT));
     mvprintw(row, col, "     ");
     mvprintw(row + 1, col, "      ");
+    mvprintw(row - 1, table, "         ");
     attroff(COLOR_PAIR(TEXT));
+}
+
+void Utility::endGame()
+{
+    clear();
+    attron(COLOR_PAIR(TITLE));
+    mvprintw(rows/3 - 7, columns/2 - 53, "  _______      ___      .___  ___.  _______      ______   ____    ____  _______ .______      ");
+    mvprintw(rows/3 - 6, columns/2 - 53, " /  _____|    /   \\     |   \\/   | |   ____|    /  __  \\  \\   \\  /   / |   ____||   _  \\     ");
+    mvprintw(rows/3 - 5, columns/2 - 53, "|  |  __     /  ^  \\    |  \\  /  | |  |__      |  |  |  |  \\   \\/   /  |  |__   |  |_)  |    ");
+    mvprintw(rows/3 - 4, columns/2 - 53, "|  | |_ |   /  /_\\  \\   |  |\\/|  | |   __|     |  |  |  |   \\      /   |   __|  |      /     ");
+    mvprintw(rows/3 - 3, columns/2 - 53, "|  |__| |  /  _____  \\  |  |  |  | |  |____    |  `--'  |    \\    /    |  |____ |  |\\  \\----.");
+    mvprintw(rows/3 - 2, columns/2 - 53, " \\______| /__/     \\__\\ |__|  |__| |_______|    \\______/      \\__/     |_______|| _| `._____|");
+    attroff(COLOR_PAIR(TITLE));
+    mvprintw(rows/3, columns/2 - 30, "Restauracja zbankrutowała! [F10 aby wyjść]");
+    int choice = 0;
+    while(choice != 274)
+    {
+        choice = getch();
+    };
 }
