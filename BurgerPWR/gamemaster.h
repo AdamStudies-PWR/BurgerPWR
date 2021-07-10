@@ -66,7 +66,7 @@ private:
   int day[4] = {0, 0, 0, 0};
   int current = 0;
 
-  string selection = "🍔";
+  string selection = "BB";
   string choice[7] = {selection, "  ", "  ", "  ", "  ", "  ", "  "};
 
   kasa *k1;

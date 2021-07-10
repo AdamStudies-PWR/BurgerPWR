@@ -152,14 +152,14 @@ void GameMaster::side_UI()
 {
   attron(COLOR_PAIR(WINDOW));
   //Jedzenie
-  mvprintw(6,0.85*columns,"%s Burger:\t[%s]\t%d$ ", emoji[0].c_str(), choice[0].c_str(),prices[0]);
-  mvprintw(7,0.85*columns,"%s Frytki:\t[%s]\t%d$ ", emoji[1].c_str(), choice[1].c_str(),prices[1]);
-  mvprintw(8,0.85*columns,"%s Cola:\t[%s]\t%d$ ", emoji[2].c_str(), choice[2].c_str(),prices[2]);
-  mvprintw(9,0.85*columns,"%s Pizza:\t[%s]\t%d$ ", emoji[3].c_str(), choice[3].c_str(),prices[3]);
-  mvprintw(10,0.85*columns,"%s Kebab:\t[%s]\t%d$ ", emoji[4].c_str(), choice[4].c_str(),prices[4]);
+  mvprintw(6, 0.83*columns,"%s Burger:\t[%s]\t%d$ ", emoji[0].c_str(), choice[0].c_str(), prices[0]);
+  mvprintw(7, 0.83*columns,"%s Frytki:\t[%s]\t%d$ ", emoji[1].c_str(), choice[1].c_str(), prices[1]);
+  mvprintw(8, 0.83*columns,"%s Cola:\t[%s]\t%d$ ", emoji[2].c_str(), choice[2].c_str(), prices[2]);
+  mvprintw(9, 0.83*columns,"%s Pizza:\t[%s]\t%d$ ", emoji[3].c_str(), choice[3].c_str(), prices[3]);
+  mvprintw(10, 0.83*columns,"%s Kebab:\t[%s]\t%d$ ", emoji[4].c_str(), choice[4].c_str(), prices[4]);
   //Parcownicy
-  mvprintw(15,0.85*columns,"%s Ilość:\t[%s]\t%d ", emoji[5].c_str(), choice[5].c_str(), max_workers);
-  mvprintw(16,0.85*columns,"%s Pensja:\t[%s]\t%d$/h ", emoji[6].c_str(), choice[6].c_str(),pay);
+  mvprintw(15, 0.83*columns,"%s Ilość:\t[%s]\t%d ", emoji[5].c_str(), choice[5].c_str(), max_workers);
+  mvprintw(16, 0.83*columns,"%s Pensja:\t[%s]\t%d$/h ", emoji[6].c_str(), choice[6].c_str(), pay);
   attroff(COLOR_PAIR(WINDOW));
 }
 

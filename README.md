@@ -11,3 +11,5 @@ Wymyślony przeze mnie projekt polega na implementacji prostego symulatora resta
 Projekt ten zawiera zarówno elemnty problemu konsumenta/producenta jak i problemu głodujących filozofów, głownie jednak skupia się na tym pierwszym.
 
 Proejkt zosatł zaliczony na ocenę 5.0
+
+**UWAGA** Do poprawnego działania aplikacji zalecane jest użycie powłoki bash ze standardowymi kolorami (np Breeze).
