@@ -14,7 +14,6 @@ SOURCES += \
 HEADERS += \
     gamemaster.h \
     interface.h \
-    resources.h \
     utility.h
 
 INCLUDEPATH += -L/usr/lib/headers/
