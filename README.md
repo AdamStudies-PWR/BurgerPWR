@@ -13,3 +13,5 @@ Projekt ten zawiera zarówno elemnty problemu konsumenta/producenta jak i proble
 Proejkt zosatł zaliczony na ocenę 5.0
 
 **UWAGA** Do poprawnego działania aplikacji zalecane jest użycie powłoki bash ze standardowymi kolorami (np Breeze).
+
+Wersja emoji dostępna [tutaj](https://github.com/AdamStudies-PWR/BurgerPWR/tree/emoji)
