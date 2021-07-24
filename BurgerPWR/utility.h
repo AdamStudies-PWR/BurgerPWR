@@ -43,8 +43,8 @@ public:
   bool drawing = false;
   mutex m;
 protected:
-  string emoji[7] = {"BB", "FF", "CC", "PP", "KK", "NN", "MM"};
-  string objects[2] = {" PP ", " KK "};
+  string emoji[7] = {"🍔", "🍟", "🥃", "🍕", "🌭", "🧑‍🍳", "💲"};
+  string objects[2] = {" 🧑‍🍳 ", " 🙍 "};
 
   int rows = 0;
   int columns = 0;

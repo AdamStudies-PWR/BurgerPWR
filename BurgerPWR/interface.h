@@ -11,7 +11,7 @@ private:
   //Zmienne
   int workers = 3;
   int pay = 15;
-  string selection = "BB";
+  string selection = "🍔";
   bool highscore = false;
   int prices[5] = {10, 8, 5, 14, 12};
   int production[5] = {3, 2, 2, 5, 4};
